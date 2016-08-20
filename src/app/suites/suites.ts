@@ -3,6 +3,7 @@ import {FORM_DIRECTIVES} from '@angular/common';
 import {DateBarComponent} from '../date-bar';
 import {DateData} from '../pojo/date-data';
 import {TestPlanItem} from '../pojo/test-plan';
+import {DateDataService} from '../services/dateData.service';
 declare var $: JQueryStatic;
 
 @Component({
@@ -14,7 +15,7 @@ declare var $: JQueryStatic;
             <div class="five wide column">
                 <div class="ui segment raised" style="height: 200px">
                     <div class="ui form">
-                         <select class="form-control" [(ngModel)]="dateData.season_exists" name="power">
+                         <select class="form-control" [(ngModel)]="dateData.season_exists" (ngModelChange)="seasonModeChange($event)" name="season_mode">
                              <option [value]="'no seasons'">No Seasons</option>
                              <option [value]="'1 season 1 p'">1 season (1 period)</option>
                              <option [value]="'1 season 2 p'">1 season (2 periods)</option>
@@ -56,7 +57,7 @@ declare var $: JQueryStatic;
                 <div class=""><b>TCEF</b></div>
                 <div class="">100</div>
              </div>
-             <div class="eight wide column">
+             <div class="eight wide column" [hidden]="dateData.season_exists != '1 season 1 p' && dateData.season_exists != '2 seasons'  ">
                   <div class="ui styled accordion">
                       <div class="title">
                         <i class="dropdown icon"></i>
@@ -75,7 +76,7 @@ declare var $: JQueryStatic;
                       </div>
                   </div>
              </div>
-             <div class="eight wide column">
+             <div class="eight wide column" [hidden]="dateData.season_exists != '2 seasons' ">
                   <div class="ui styled accordion">
                       <div class="title">
                         <i class="dropdown icon"></i>
@@ -94,6 +95,29 @@ declare var $: JQueryStatic;
                       </div>
                   </div>
              </div>
+             <div class="sixteen wide column" [hidden]="dateData.season_exists != '1 season 2 p'">
+                  <div class="ui styled accordion">
+                      <div class="title">
+                        <i class="dropdown icon"></i>
+                        Season 1
+                        <span class="season_base season-1" style="float: right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      </div>
+                      <div class="ui content grid">
+                            <div class="row padding-v-5">
+                                <div class="four wide column"><b>Start (p1)</b></div>
+                                <div class="four wide column"><b>End (p1)</b></div>
+                                <div class="four wide column"><b>Start (p2)</b></div>
+                                <div class="four wide column"><b>End (p2)</b></div>
+                            </div>
+                            <div class="row padding-v-5">
+                                <div class="four wide column">{{dateData.season1_start}} </div>
+                                <div class="four wide column">{{dateData.season1_end}}</div>
+                                <div class="four wide column">{{dateData.season2_start}} </div>
+                                <div class="four wide column">{{dateData.season2_end}}</div>
+                            </div>
+                      </div>
+                  </div>
+             </div>
         </div>
         <br />
         <date-bar [dateData]="dateData"></date-bar>
@@ -105,6 +129,10 @@ declare var $: JQueryStatic;
 export class Suites implements AfterViewInit {
 
     @Input('testPlan') testPlan: TestPlanItem;
+
+    seasonModeChange(mode: string) {
+        this.dateDataService.setCurrentDateData(this.dateData);
+    }
 
     guestData: any = {
         adults: 3,
@@ -118,7 +146,6 @@ export class Suites implements AfterViewInit {
         season1_end: "Aug 28",
         season2_start: "Sep 5",
         season2_end: "Sep 16",
-        season2_exists: false,
         season_exists: "2 seasons"
     };
 
@@ -126,6 +153,7 @@ export class Suites implements AfterViewInit {
         $('.ui.accordion')['accordion']();
     }
 
-    constructor() {
+    constructor(public dateDataService: DateDataService) {
+        this.dateDataService.setCurrentDateData(this.dateData);
     }
 }

@@ -8,7 +8,6 @@ export interface DateData {
     season1_end?: string;
     season2_start?: string;
     season2_end?: string;
-    season2_exists?: boolean;
     season_exists: string;
     status?: string;
 }

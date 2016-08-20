@@ -7,6 +7,7 @@ import {MyUIRouterConfig} from "./app/router.config";
 import {LocationStrategy, HashLocationStrategy, PathLocationStrategy, PlatformLocation} from "@angular/common";
 import {BrowserPlatformLocation} from '@angular/platform-browser';
 import { PLATFORM_DIRECTIVES} from "@angular/core";
+import {servicesInjectables} from './app/services/services';
 
 // import 'vendor/jquery/dist/jquery.js';
 // import 'vendor/jquery-ui-dist/jquery-ui.js';
@@ -32,6 +33,8 @@ bootstrap(UIView, [
 
     // Provide a custom UIRouterConfig to configure UI-Router
     provide(UIRouterConfig, { useClass: MyUIRouterConfig }),
+
+    servicesInjectables,
 
     // Make `directives: [UIROUTER_DIRECTIVES]` optional in a @Component
     // by always including them in the PLATFORM_DIRECTIVCES

@@ -1,3 +1,7 @@
+    [hidden] {
+        display: none !important;
+    }
+
     .season_base {
         background-color: white;
         display: inline-block; 
