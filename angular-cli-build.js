@@ -11,7 +11,13 @@ module.exports = function(defaults) {
       'es6-shim/es6-shim.js',
       'reflect-metadata/*.js',
       'rxjs/**/*.js',
-      '@angular/**/*.js'
+      '@angular/**/*.js',
+      'jquery/dist/jquery.js',
+      'semantic-ui-css/semantic.min.{js,css}',
+      'semantic-ui-css/themes/**/*',
+      'ui-router-ng2/_bundles/ui-router-ng2.min.js',
+      'jquery-ui-dist/jquery-ui.min.{js,css}',
+      'ng2-radio-group/*.js'
     ]
   });
 };

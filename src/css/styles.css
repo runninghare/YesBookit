@@ -1,0 +1,44 @@
+    .season_base {
+        background-color: white;
+        display: inline-block; 
+        text-align: center;
+        color: black;
+        width: 20px;
+        font-size: 10px;
+        border: solid 1px;
+    }
+
+    .season_base.season-1 {
+        background-color: #0097a7;
+        color: white;
+    }
+
+    .season_base.season-2 {
+        background-color: #ff3d00;
+        color: white;
+    }
+
+    .slide-season-1 {
+        background-color: #0097a7;
+    }
+
+    .slide-season-2 {
+        background-color: #ff3d00;
+    }
+
+    .booking {
+        border: solid 1px;
+        margin-left: 60px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .clear-v-padding {
+        padding-top: 0px !important;
+        padding-bottom:  0px !important;
+    }
+
+    .padding-v-5 {
+        padding-top: 5px !important;
+        padding-bottom:  5px !important;
+    }

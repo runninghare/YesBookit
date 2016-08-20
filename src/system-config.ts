@@ -3,6 +3,8 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
+  'semantic-ui-css': 'vendor/semantic-ui-css',
+  'ui-router-ng2':  'vendor/ui-router-ng2/_bundles/ui-router-ng2.min.js',
 };
 
 /** User packages configuration. */

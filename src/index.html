@@ -6,6 +6,9 @@
   <base href="/">
   {{content-for 'head'}}
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="vendor/semantic-ui-css/semantic.min.css">
+  <link rel="stylesheet" href="vendor/jquery-ui-dist/jquery-ui.min.css">
+  <link rel="stylesheet" href="css/styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Service worker support is disabled by default.
@@ -21,12 +24,16 @@
   -->
 </head>
 <body>
-  <tariff-test-portal-app>Loading...</tariff-test-portal-app>
 
   <script src="vendor/es6-shim/es6-shim.js"></script>
   <script src="vendor/reflect-metadata/Reflect.js"></script>
   <script src="vendor/systemjs/dist/system.src.js"></script>
   <script src="vendor/zone.js/dist/zone.js"></script>
+  <script src="vendor/jquery/dist/jquery.js"></script>
+  <script src="vendor/jquery-ui-dist/jquery-ui.min.js"></script>
+
+  <ui-view>Loading...</ui-view>
+  <my-app></my-app>
 
   <script>
     System.import('system-config.js').then(function () {
