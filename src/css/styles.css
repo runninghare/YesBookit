@@ -2,6 +2,10 @@
         display: none !important;
     }
 
+    body {
+        font-family: 'Roboto', sans-serif !important;
+    }
+
     .season_base {
         background-color: white;
         display: inline-block; 

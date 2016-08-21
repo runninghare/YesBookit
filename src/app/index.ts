@@ -42,7 +42,7 @@ export class AppComponent implements AfterViewInit{
 
     ngAfterViewInit() {
         $('.sidebar')['sidebar']({context: $('.segment.pushable')});
-        $('.sidebar')['sidebar']('setting', {dimPage: false, closable: false});
+        $('.sidebar')['sidebar']('setting', {dimPage: false, closable: false, transition: 'push'});
     }
 
     toggleMenu(): boolean {
