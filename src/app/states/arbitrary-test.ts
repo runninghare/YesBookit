@@ -3,8 +3,11 @@ import  {Component, Input, Directive} from '@angular/core';
 import {DateData} from '../pojo/date-data';
 import {GuestData} from '../pojo/guest-data';
 import {TariffData} from '../pojo/tariff-data';
+import {RatePostData} from '../pojo/post-data';
+import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
 
-import {TestPlanItem} from '../pojo/test-plan';
+import {Http, Response} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
 
 import {TestUnit} from '../components/test-unit';
 
@@ -38,17 +41,10 @@ export class ArbitraryTest {
         season_exists: "2 seasons"
     };
 
-    tariffData: TariffData = {
-        test_scheme_override: 5
-    };
-
-    generateDummyData(): void {
-        this.tariffData = {
-
-        };
-    }
-
-    constructor(public rateCalcService: RateCalcService) {
-        console.log(rateCalcService.generateDummyPostData());
+    constructor(public rateCalcService: RateCalcService, public http: Http) {
+        rateCalcService.setCurrentPostData(RateCalcService.generateDummyPostData());
+        // rateCalcService.currentYBIResponse = rateCalcService.currentPostData.flatMap(() => http.get("tsconfig.json"));
+        rateCalcService.currentYBIResponse = rateCalcService.currentPostData.flatMap((postData: RatePostData) => 
+            http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json() ));
     }
 }

@@ -1,15 +1,17 @@
-import {Component, Injectable, bind} from '@angular/core';
+import {Component, Injectable, bind, OnInit} from '@angular/core';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import {DateData} from '../pojo/date-data';
 import {UserInputData} from '../pojo/user-input-data';
 import {TariffData} from '../pojo/tariff-data';
 import {RulesData} from '../pojo/rules-data';
 import {RatePostData} from '../pojo/post-data';
-import {Subject, BehaviorSubject} from 'rxjs/Rx';
+import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
+import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 
 @Injectable()
 export class RateCalcService {
 
-    generateDummyPostData(): RatePostData {
+    static generateDummyPostData(): RatePostData {
         return {
             user_input: {
                 guests: {
@@ -49,11 +51,18 @@ export class RateCalcService {
                 }
             }
         };
-    // currentDateData: Subject<DateData> = new BehaviorSubject<DateData>(null);
+    }
 
-        // public setCurrentDateData(dateData: DateData): void {
-        //     this.currentDateData.next(dateData);
-        // }
+    currentPostData: Subject<RatePostData> = new BehaviorSubject<RatePostData>(null);
+
+    currentYBIResponse: Observable<YBIExistingTariffResponse>;
+
+    public setCurrentPostData(postData: RatePostData): void {
+        this.currentPostData.next(postData);
+    }
+
+    constructor() {
+        // this.currentYBIResponse = this.currentPostData.flatMap((postData:RatePostData) => Observable.from([100,200,300]));
     }
 }
 
