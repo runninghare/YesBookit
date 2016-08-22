@@ -1,15 +1,17 @@
 import  {Component, Injectable, Input, AfterViewInit} from '@angular/core';
 import {FORM_DIRECTIVES} from '@angular/common';
-import {DateBarComponent} from '../date-bar';
+
 import {DateData} from '../pojo/date-data';
-import {TestPlanItem} from '../pojo/test-plan';
+import {GuestData} from '../pojo/guest-data';
+
+import {DateBarComponent} from '../date-bar';
 import {DateDataService} from '../services/dateData.service';
+import {RateCalcService} from '../services/rate-calc.service';
 declare var $: JQueryStatic;
 
 @Component({
-    selector: "suite",
+    selector: "test-unit",
     template: `
-    <h1>{{testPlan.title}}</h1>
     <div class="ui piled segment" style="width: 840px">
         <div class="ui grid" style="width: 100%">
             <div class="five wide column">
@@ -40,7 +42,7 @@ declare var $: JQueryStatic;
                             <div class="three wide column"> {{dateData.booking_departure}}</div>
                             <div class="two wide column">{{dateData.los}}</div>
                             <div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="guestData.adults"/></div>
-                            <div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="guestData.kids"/></div>
+                            <div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="guestData.children"/></div>
                         </div>
                         <div class="eight wide column">{{dateData.status}}</div>
                         <div class="eight wide column">{{dateData.session_exists}}</div>
@@ -56,6 +58,86 @@ declare var $: JQueryStatic;
                 <div class="ui divider"></div>
                 <div class=""><b>TCEF</b></div>
                 <div class="">100</div>
+             </div>
+             <div class="sixteen wide column">
+               <div class="ui styled accordion" style="width: 100%">
+                      <div class="title">
+                        <i class="dropdown icon"></i>
+                        Property Tariff Info
+                      </div>
+                      <div class="ui content form">
+                              <div class="field">
+                                  <div class="three fields">
+                                      <div class="field">
+                                        <label for="base price">Property Price</label>
+                                        <input name="base price" placeholder="$dollar" type="text">
+                                      </div>
+                                      <div class="field">
+                                        <label for="booking fee">Booking Fee</label>
+                                        <input name="booking fee" placeholder="$dollar" type="text">
+                                      </div>
+                                      <div class="field">
+                                        <label for="bond">Bond</label>
+                                        <input name="bond" placeholder="$dollar" type="text">
+                                      </div>                                      
+                                  </div>
+                            </div>
+                            <div class="field">
+                                  <div class="three fields">
+                                    <div class="field">
+                                      <label for="cleaning base">Cleaning Base</label>
+                                      <input name="cleaning base" placeholder="$dollar" type="text">
+                                    </div>
+                                    <div class="field">
+                                      <label for="cleaning per block">Cleaning $/block</label>
+                                      <input name="cleaning per block" placeholder="$dollar" type="text">
+                                    </div>
+                                    <div class="field">
+                                      <label for="cleaning day block">Cleaning days/block</label>
+                                      <input name="cleaning day block" placeholder="number of days" type="text">
+                                    </div>                                    
+                                  </div>
+                            </div>
+                            <div class="field">
+                                  <div class="six fields">
+                                      <div class="field">
+                                        <label for="guest min">Guest <br/>Min Number</label>
+                                        <input name="guest min" placeholder="Min. Number" type="text">
+                                      </div>
+                                      <div class="field">
+                                        <label for="guest max">Guest <br/>Max Number</label>
+                                        <input name="guest max" placeholder="Max. Number" type="text">
+                                      </div>
+                                      <div class="field">
+                                        <label for="guest above">Adult Surchage Above</label>
+                                        <input name="guest above" placeholder="adults num" type="text">
+                                      </div>         
+                                      <div class="field">
+                                        <label for="guest surcharge">Adult Surchage Amount</label>
+                                        <input name="guest surcharge" placeholder="$dollar" type="text">
+                                      </div> 
+                                      <div class="field">
+                                        <label for="children above">Children Surchage Above</label>
+                                        <input name="children above" placeholder="children num" type="text">
+                                      </div>         
+                                      <div class="field">
+                                        <label for="children surcharge">Children Surchage Amount</label>
+                                        <input name="children surcharge" placeholder="$dollar" type="text">
+                                      </div>                                                                                                                                                    
+                                  </div>
+                            </div>                            
+                      </div>     
+                  </div>
+             </div>
+             <div class="sixteen wide column">
+               <div class="ui styled accordion" style="width: 100%">
+                      <div class="title">
+                        <i class="dropdown icon"></i>
+                        Seasonal Tariff
+                      </div>
+                      <div class="ui content form">
+                      </div>
+                  </div>
              </div>
              <div class="eight wide column" [hidden]="dateData.season_exists != '1 season 1 p' && dateData.season_exists != '2 seasons'  ">
                   <div class="ui styled accordion">
@@ -120,34 +202,21 @@ declare var $: JQueryStatic;
              </div>
         </div>
         <br />
-        <date-bar [dateData]="dateData"></date-bar>
+        <date-bar [dateData]="dateData" [itemId]="itemId"></date-bar>
     </div>
-
     `,
-    directives: [FORM_DIRECTIVES, DateBarComponent]
+    directives: [FORM_DIRECTIVES, DateBarComponent],
+    inputs: ['guestData', 'dateData', 'itemId']
 })
-export class Suites implements AfterViewInit {
-
-    @Input('testPlan') testPlan: TestPlanItem;
+export class TestUnit implements AfterViewInit {
 
     seasonModeChange(mode: string) {
         this.dateDataService.setCurrentDateData(this.dateData);
     }
 
-    guestData: any = {
-        adults: 3,
-        kids: 1
-    }
-
-    dateData: DateData = {
-        booking_arrival: "Aug 20",
-        booking_departure: "Sep 6",
-        season1_start: "Aug 20",
-        season1_end: "Aug 28",
-        season2_start: "Sep 5",
-        season2_end: "Sep 16",
-        season_exists: "2 seasons"
-    };
+    guestData: GuestData;
+    dateData: DateData;
+    itemId: number;
 
     ngAfterViewInit() {
         $('.ui.accordion')['accordion']();
@@ -155,5 +224,10 @@ export class Suites implements AfterViewInit {
 
     constructor(public dateDataService: DateDataService) {
         this.dateDataService.setCurrentDateData(this.dateData);
+        setTimeout(() => {
+          this.dateData.season_exists = "1 season 1 p";
+          this.dateData.booking_arrival = "Sep 2";
+          this.dateDataService.setCurrentDateData(this.dateData);
+        }, 3000);
     }
 }

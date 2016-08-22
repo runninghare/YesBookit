@@ -1,4 +1,4 @@
-import  {Component, Injectable, Input, AfterViewInit, bind} from '@angular/core';
+import  {Component, Injectable, bind} from '@angular/core';
 import {DateData} from '../pojo/date-data';
 import {Subject, BehaviorSubject} from 'rxjs/Rx';
 

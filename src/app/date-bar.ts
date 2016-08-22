@@ -1,5 +1,4 @@
 import  {Component, Injectable, Input, AfterViewInit, OnInit} from '@angular/core';
-import {HighlightDirective, RangeSlider} from './directives/daterange';
 import {DateData} from './pojo/date-data';
 import {DateDataService} from './services/dateData.service';
 declare var $: JQueryStatic;
@@ -9,20 +8,23 @@ declare var $: JQueryStatic;
     template: `
 
     <div style="width:800px; height: 10px">
-        <div id="slider-range-season1" [hidden]="dateData.season_exists=='no seasons'" style="width: 800px; position: absolute"></div>
-        <div id="slider-range-season2" [hidden]="dateData.season_exists=='1 season 1 p' || dateData.season_exists=='no seasons' " style="width: 800px; position: absolute"></div>
+        <div [id]="'slider-range-season1-'+itemId" [hidden]="dateData.season_exists=='no seasons'" style="width: 800px; position: absolute"></div>
+        <div [id]="'slider-range-season2-'+itemId" [hidden]="dateData.season_exists=='1 season 1 p' || dateData.season_exists=='no seasons' " style="width: 800px; position: absolute"></div>
     </div>
     <div class="ui row">
         <span *ngFor="let d of dateRange; let i = index" class="season_base" [ngClass]="classes[i]" >{{d}}</span>
     </div>
-    <div id="slider-range-booking" style="width: 800px"></div>
+    <div [id]="'slider-range-booking-'+itemId" style="width: 800px"></div>
     `,
-    directives: [HighlightDirective, RangeSlider],
-    inputs: ['dateData']
+    inputs: ['dateData', 'itemId']
 })
 export class DateBarComponent  implements AfterViewInit, OnInit {
 
     dateData: DateData;
+    itemId: number;
+
+    slider1:  HTMLElement;
+    slider2:  HTMLElement;
 
     exists(season: string): boolean {
         if (season == "season 1") {
@@ -134,7 +136,7 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
         var season2_start_idx = this.dateRange.indexOf(this.dateData.season2_start);
         var season2_end_idx = this.dateRange.indexOf(this.dateData.season2_end);
 
-        $("#slider-range-booking")['slider']({
+        $("#slider-range-booking-"+this.itemId)['slider']({
             range: true,
             min: 0,
             max: 39,
@@ -151,7 +153,7 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
             }
         });
 
-        $("#slider-range-season1")['slider']({
+        $("#slider-range-season1-"+this.itemId)['slider']({
             range: true,
             min: 0,
             max: 39,
@@ -177,7 +179,7 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
             }
         });
 
-        $("#slider-range-season2")['slider']({
+        $("#slider-range-season2-"+this.itemId)['slider']({
             range: true,
             min: 0,
             max: 39,
@@ -210,8 +212,8 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
             }
         }
 
-        $('#slider-range-season1 .ui-slider-range').addClass('slide-season-1');
-        $('#slider-range-season2 .ui-slider-range').removeClass('slide-season-1').removeClass('slide-season-2')
+        $(`#slider-range-season1-${this.itemId} .ui-slider-range`).addClass('slide-season-1');
+        $(`#slider-range-season2-${this.itemId} .ui-slider-range`).removeClass('slide-season-1').removeClass('slide-season-2')
             .addClass(this.dateData.season_exists == "2 seasons" ? "slide-season-2" : "slide-season-1");
 
         this.calcStatus(booking_arrival_idx, booking_departure_idx, season1_start_idx, season1_end_idx, season2_start_idx, season2_start_idx);

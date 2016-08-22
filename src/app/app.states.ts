@@ -1,5 +1,6 @@
  import {AppComponent} from "./index";
- import {Suites} from "./suites/suites";
+ import {Suites} from "./states/suites";
+ import {ArbitraryTest} from "./states/arbitrary-test";
  import {Ng2StateDeclaration, Transition} from "ui-router-ng2";
 
  // The top level states
@@ -9,6 +10,10 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
   {
     name: 'app',
     component: AppComponent
+  },
+  {
+    name: 'app.arbitrary',
+    component: ArbitraryTest
   },
   {
     name: 'app.suites',
