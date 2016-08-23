@@ -19,7 +19,7 @@ declare var $: JQueryStatic;
         <h2 class="header item borderless">Tariff Unit Test Portal</h2>
     </div>
     <div class="ui bottom attached segment pushable">
-       <div class="ui visible left vertical sidebar menu">
+       <div class="ui left vertical sidebar menu green inverted">
            <a class="teal item" uiSref="app.arbitrary" uiSrefActive="active">
               <h3>Arbitrary Unit Tests
               </h3>
@@ -45,8 +45,8 @@ export class AppComponent implements AfterViewInit{
     testPlan: TestPlanItem[];
 
     ngAfterViewInit() {
-        $('.sidebar')['sidebar']({context: $('.segment.pushable')});
-        $('.sidebar')['sidebar']('setting', {dimPage: false, closable: false, transition: 'push'});
+        // $('.sidebar')['sidebar']({context: $('.segment.pushable')});
+        $('.sidebar')['sidebar']('setting', {dimPage: false, closable: true, transition: 'overlay'});
     }
 
     toggleMenu(): boolean {

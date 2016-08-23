@@ -51,15 +51,15 @@ export interface TariffData {
         child_above?:number;
         child_surcharge?:number;
 
-        OM_1?:string;
-        OPR_1?:string;
-        OV_1?:number;
-        OW1_1?:number;
+        group1_rate_type?: string;
+        group1_perrata_type?: string;
+        group1_nightly?:number;
+        group1_optional_weekly?:number;
 
-        OM_2?:string;
-        OPR_2?:string;
-        OV_2?:number;
-        OW1_2?:number;
+        group2_rate_type?: string;
+        group2_perrata_type?: string;
+        group2_nightly?:number;
+        group2_optional_weekly?:number;
 
         test_scheme_override?: SchemeData;
 

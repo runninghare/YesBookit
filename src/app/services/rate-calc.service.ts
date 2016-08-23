@@ -35,6 +35,10 @@ export class RateCalcService {
                 "cpb": 15,
                 "cds": 3,
                 "guest_surcharge": 11,
+                "group1_rate_type": "F",
+                "group1_perrata_type": "PN",
+                "group1_nightly": 5,
+                "group1_optional_weekly":500.00,
                 "test_scheme_override": {
                     "groups": [1]
                 },
