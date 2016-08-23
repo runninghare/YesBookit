@@ -35,19 +35,30 @@ export class RateCalcService {
                 "cpb": 15,
                 "cds": 3,
                 "guest_surcharge": 11,
+                "test_scheme_override": {
+                    "groups": [1]
+                },
                 "test_seasons_override": {
                     "1": {
                         "pairs": [
-                            {
-                                "to": "25/08/2017",
-                                "from": "22/08/2017"
-                            },
+                            // {
+                            //     "to": "25/08/2017",
+                            //     "from": "22/08/2017"
+                            // },
                             {
                                 "from": "31/08/2017",
                                 "to": "07/09/2017"
                             }
                         ]
-                    }
+                    },
+                    // "2": {
+                    //     "pairs": [
+                    //         {
+                    //             "from": "1/9/2017",
+                    //             "to": "18/9/2017"
+                    //         }
+                    //     ]
+                    // }
                 }
             }
         };

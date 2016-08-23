@@ -1,6 +1,7 @@
-import  {Component, Injectable, Input, AfterViewInit, OnInit} from '@angular/core';
+import  {Component, Injectable, Input, AfterViewInit, OnInit, EventEmitter} from '@angular/core';
 import {DateData} from './pojo/date-data';
 import {DateDataService} from './services/dateData.service';
+import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 declare var $: JQueryStatic;
 
 @Component({
@@ -16,7 +17,8 @@ declare var $: JQueryStatic;
     </div>
     <div [id]="'slider-range-booking-'+itemId" style="width: 800px"></div>
     `,
-    inputs: ['dateData', 'itemId']
+    inputs: ['dateData', 'itemId'],
+    outputs: ['dateSliderUpdated']
 })
 export class DateBarComponent  implements AfterViewInit, OnInit {
 
@@ -25,6 +27,15 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
 
     slider1:  HTMLElement;
     slider2:  HTMLElement;
+
+    // season1SliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
+    // season2SliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
+    // bookingSliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
+
+    // mergedDateStream: Observable<DateData>;
+
+    // dateSliderStreamReady: EventEmitter<Observable<DateData>> = new EventEmitter<Observable<DateData>>();
+    dateSliderUpdated: EventEmitter<DateData> = new EventEmitter<DateData>();
 
     exists(season: string): boolean {
         if (season == "season 1") {
@@ -39,7 +50,17 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
     ngOnInit() {
         this.dateDataService.currentDateData.subscribe((dd: DateData) => {
             this.ngAfterViewInit();
-        })
+        });
+
+        // var mergedDateStream: Observable<DateData> = this.season1SliderStream.merge(this.season2SliderStream).merge(this.bookingSliderStream);
+
+        // this.mergedDateStream = mergedDateStream;
+
+        // this.dateSliderStreamReady.emit(mergedDateStream);
+
+        // // this.mergedDateStream = mergedDateStream.buffer(mergedDateStream.throttleTime(500)).map((a: DateData[]) => {return a.pop()});
+
+        // this.mergedDateStream.subscribe((dt) => {console.log(dt)});
     }
 
     dateRange: string[] = [
@@ -150,6 +171,9 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
                     this.dateRange.indexOf(this.dateData.season1_start), this.dateRange.indexOf(this.dateData.season1_end),
                     this.dateRange.indexOf(this.dateData.season2_start), this.dateRange.indexOf(this.dateData.season2_end)
                 );
+
+                // this.bookingSliderStream.next(this.dateData);
+                this.dateSliderUpdated.emit(this.dateData);
             }
         });
 
@@ -176,6 +200,9 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
                     this.dateRange.indexOf(this.dateData.season1_start), this.dateRange.indexOf(this.dateData.season1_end),
                     this.dateRange.indexOf(this.dateData.season2_start), this.dateRange.indexOf(this.dateData.season2_end)
                 );
+
+                // this.bookingSliderStream.next(this.dateData);
+                this.dateSliderUpdated.emit(this.dateData);
             }
         });
 
@@ -199,6 +226,9 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
                     this.dateRange.indexOf(this.dateData.season1_start), this.dateRange.indexOf(this.dateData.season1_end),
                     this.dateRange.indexOf(this.dateData.season2_start), this.dateRange.indexOf(this.dateData.season2_end)
                 );
+
+                // this.bookingSliderStream.next(this.dateData);
+                this.dateSliderUpdated.emit(this.dateData);
             }
         });
 
