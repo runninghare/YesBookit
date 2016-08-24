@@ -38,7 +38,7 @@ export interface SchemeData {
 
 export interface TariffData {
         base_nightly?: number; 
-        Bfee?: number ; 
+        booking_fee?: number ; 
         cds?: number;
         cpb?: number; 
         cpd ?: number;

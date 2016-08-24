@@ -20,10 +20,11 @@ import {RateCalcService} from '../services/rate-calc.service';
             <div class="eight wide column">
                 <div class="ui segment raised">
                    <div class="ui grid">
-                       <span class="four wide column header orange">$ \{{existingTotal}}</span>
+                       <span class="three wide column header orange">$ \{{existingTotal}}</span>
                        <span class="four wide column">{{existingRent}} (R)</span>
-                       <span class="four wide column">{{existingGuest}} (G)</span>
-                       <span class="four wide column">{{existingClean}} (C)</span>
+                       <span class="three wide column">{{existingGuest}} (G)</span>
+                       <span class="three wide column">{{existingBooking}} (B)</span>
+                       <span class="three wide column">{{existingClean}} (C)</span>
                    </div>
                    <div class="ui divider"></div>
                    <div [innerHtml]="calcMessage"></div>                
@@ -55,6 +56,7 @@ export class ArbitraryTest {
     existingGuest: number;
     existingClean: number;
     existingBond: number;
+    existingBooking: number;
     calcMessage: string;
 
     constructor(public rateCalcService: RateCalcService, public http: Http) {
@@ -67,6 +69,7 @@ export class ArbitraryTest {
                 this.existingTotal = res.result[0].total;
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;
+                this.existingBooking = res.result[0].Bfee;
                 this.existingClean = res.result[0].clean;
                 this.existingBond = res.result[0].bond;
                 this.calcMessage = res.result[0].desc;

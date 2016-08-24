@@ -29,7 +29,7 @@ export class RateCalcService {
                 "guest_min": 1,
                 "child_surcharge": 7,
                 "cpd": 3,
-                "Bfee": 800,
+                "booking_fee": 35,
                 "exec": 0,
                 "bond": 500,
                 "cpb": 15,
