@@ -246,7 +246,7 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
         $(`#slider-range-season2-${this.itemId} .ui-slider-range`).removeClass('slide-season-1').removeClass('slide-season-2')
             .addClass(this.dateData.season_exists == "2 seasons" ? "slide-season-2" : "slide-season-1");
 
-        this.calcStatus(booking_arrival_idx, booking_departure_idx, season1_start_idx, season1_end_idx, season2_start_idx, season2_start_idx);
+        this.calcStatus(booking_arrival_idx, booking_departure_idx, season1_start_idx, season1_end_idx, season2_start_idx, season2_end_idx);
 
     }
 
