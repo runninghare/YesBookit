@@ -8,14 +8,14 @@ declare var $: JQueryStatic;
     selector: "date-bar",
     template: `
 
-    <div style="width:800px; height: 10px">
-        <div [id]="'slider-range-season1-'+itemId" [hidden]="dateData.season_exists=='no seasons'" style="width: 800px; position: absolute"></div>
-        <div [id]="'slider-range-season2-'+itemId" [hidden]="dateData.season_exists=='1 season 1 p' || dateData.season_exists=='no seasons' " style="width: 800px; position: absolute"></div>
+    <div style="height: 10px">
+        <div [id]="'slider-range-season1-'+itemId" [hidden]="dateData.season_exists=='no seasons'" style="width: 1000px; position: absolute"></div>
+        <div [id]="'slider-range-season2-'+itemId" [hidden]="dateData.season_exists=='1 season 1 p' || dateData.season_exists=='no seasons' " style="width: 1000px; position: absolute"></div>
     </div>
     <div class="ui row">
         <span *ngFor="let d of dateRange; let i = index" class="season_base" [ngClass]="classes[i]" >{{d}}</span>
     </div>
-    <div [id]="'slider-range-booking-'+itemId" style="width: 800px"></div>
+    <div [id]="'slider-range-booking-'+itemId" style="width: 1000px"></div>
     `,
     inputs: ['dateData', 'itemId'],
     outputs: ['dateSliderUpdated']
@@ -28,11 +28,11 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
     slider1:  HTMLElement;
     slider2:  HTMLElement;
 
-    // season1SliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
-    // season2SliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
-    // bookingSliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
+    season1SliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
+    season2SliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
+    bookingSliderStream: Subject<DateData> = new BehaviorSubject<DateData>(null);
 
-    // mergedDateStream: Observable<DateData>;
+    mergedDateStream: Observable<DateData>;
 
     // dateSliderStreamReady: EventEmitter<Observable<DateData>> = new EventEmitter<Observable<DateData>>();
     dateSliderUpdated: EventEmitter<DateData> = new EventEmitter<DateData>();
@@ -52,15 +52,15 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
             this.ngAfterViewInit();
         });
 
-        // var mergedDateStream: Observable<DateData> = this.season1SliderStream.merge(this.season2SliderStream).merge(this.bookingSliderStream);
+        var mergedDateStream: Observable<DateData> = this.season1SliderStream.merge(this.season2SliderStream).merge(this.bookingSliderStream);
 
         // this.mergedDateStream = mergedDateStream;
 
         // this.dateSliderStreamReady.emit(mergedDateStream);
 
-        // // this.mergedDateStream = mergedDateStream.buffer(mergedDateStream.throttleTime(500)).map((a: DateData[]) => {return a.pop()});
+        this.mergedDateStream = mergedDateStream.debounceTime(500);
 
-        // this.mergedDateStream.subscribe((dt) => {console.log(dt)});
+        this.mergedDateStream.subscribe((dt: DateData) => {this.dateSliderUpdated.emit(dt)});
     }
 
     dateRange: string[] = [
@@ -172,8 +172,8 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
                     this.dateRange.indexOf(this.dateData.season2_start), this.dateRange.indexOf(this.dateData.season2_end)
                 );
 
-                // this.bookingSliderStream.next(this.dateData);
-                this.dateSliderUpdated.emit(this.dateData);
+                this.bookingSliderStream.next(this.dateData);
+                // this.dateSliderUpdated.emit(this.dateData);
             }
         });
 
@@ -201,8 +201,8 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
                     this.dateRange.indexOf(this.dateData.season2_start), this.dateRange.indexOf(this.dateData.season2_end)
                 );
 
-                // this.bookingSliderStream.next(this.dateData);
-                this.dateSliderUpdated.emit(this.dateData);
+                this.bookingSliderStream.next(this.dateData);
+                // this.dateSliderUpdated.emit(this.dateData);
             }
         });
 
@@ -227,8 +227,8 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
                     this.dateRange.indexOf(this.dateData.season2_start), this.dateRange.indexOf(this.dateData.season2_end)
                 );
 
-                // this.bookingSliderStream.next(this.dateData);
-                this.dateSliderUpdated.emit(this.dateData);
+                this.bookingSliderStream.next(this.dateData);
+                // this.dateSliderUpdated.emit(this.dateData);
             }
         });
 

@@ -1,0 +1,254 @@
+   <div>
+    <div class="ui grid" style="width: 100%">
+        <div class="five wide column">
+            <div class="ui segment raised" style="height: 200px">
+                <div class="ui form">
+                    <select class="form-control" [(ngModel)]="dateData.season_exists" (ngModelChange)="seasonModeChange($event)" name="season_mode">
+                        <option [value]="'no seasons'">No Seasons</option>
+                        <option [value]="'1 season 1 p'">1 season (1 period)</option>
+                        <option [value]="'1 season 2 p'">1 season (2 periods)</option>
+                        <option [value]="'2 seasons'">2 seasons</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="nine wide column">
+            <div class="ui segment raised" style="height: 200px">
+                <div class="ui grid">
+                    <div class="sixteen wide column"><b>Booking Info</b></div>
+                    <div class="row padding-v-5">
+                        <div class="three wide column"><b>Arr.</b></div>
+                        <div class="three wide column"><b>Dep.</b></div>
+                        <div class="two wide column"><b>LoS</b></div>
+                        <div class="four wide column"><b>Adults</b></div>
+                        <div class="four wide column"><b>Kids</b></div>
+                    </div>
+                    <div class="row padding-v-5">
+                        <div class="three wide column">{{dateData.booking_arrival}}</div>
+                        <div class="three wide column"> {{dateData.booking_departure}}</div>
+                        <div class="two wide column">{{dateData.los}}</div>
+                        <div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="postData.user_input.guests.adults"/></div>
+                        <div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="postData.user_input.guests.children"/></div>
+                    </div>
+                    <div class="eight wide column">{{dateData.status}}</div>
+                    <div class="eight wide column">{{dateData.session_exists}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="two wide column" style="height: 200px">
+            <div class=""><b>Existing Tariff</b></div>
+            <div class="ui header orange">{{existingTariff}}</div>
+            <div class="ui divider"></div>
+            <div class=""><b>TCEF</b></div>
+            <div class="ui header blue">{{tcefTariff}}</div>
+        </div>
+        <div class="eight wide column">
+            <div class="ui segment raised">
+                <div class="sixteen wide column"><b>Existing Tariff Calc Detail</b></div>
+                <div class="ui divider"></div>
+                <div [innerHtml]="calcMessage"></div>
+            </div>
+        </div>
+        <div class="eight wide column">
+            <div class="ui segment raised">
+                <div class="sixteen wide column"><b>TCEF Calc Detail</b></div>
+                <div class="ui divider"></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="sixteen wide column">
+            <div class="ui styled accordion" style="width: 100%">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Property Tariff Info
+                </div>
+                <div class="ui content form">
+                    <div class="field">
+                        <div class="three fields">
+                            <div class="field">
+                                <label for="base price">Property Price</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>
+                                    <input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.base_nightly" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="booking fee">Booking Fee</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>
+                                    <input name="booking fee" placeholder="$dollar" [(ngModel)]="postData.tariff.Bfee" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="bond">Bond</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>
+                                    <input name="bond" placeholder="$dollar" [(ngModel)]="postData.tariff.bond" type="text">
+                                </div>
+                            </div>                                      
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="three fields">
+                            <div class="field">
+                                <label for="cleaning base">Cleaning Base</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>
+                                    <input name="cleaning base" placeholder="$dollar" [(ngModel)]="postData.tariff.cpb" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="cleaning per block">Cleaning $/block</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>
+                                    <input name="cleaning per block" placeholder="$dollar" [(ngModel)]="postData.tariff.cpd" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="cleaning day block">Cleaning days/block</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="calendar icon"></i>
+                                    </div>
+                                    <input name="cleaning day block" placeholder="number of days" [(ngModel)]="postData.tariff.cds" type="text">
+                                </div>
+                            </div>                                    
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="six fields">
+                            <div class="field">
+                                <label for="guest min">Guest <br/>Min Number</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="users icon"></i>
+                                    </div>
+                                    <input name="guest min" placeholder="Min. Number" [(ngModel)]="postData.tariff.guest_min" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="guest max">Guest <br/>Max Number</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="users icon"></i>
+                                    </div>                                        
+                                    <input name="guest max" placeholder="Max. Number" [(ngModel)]="postData.tariff.guest_max" type="text">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="guest above">Adult Surchage Above</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="user icon"></i>
+                                    </div>   
+                                    <input name="guest above" placeholder="adults num" [(ngModel)]="postData.tariff.guest_above" type="text">
+                                </div>
+                            </div>         
+                            <div class="field">
+                                <label for="guest surcharge">Adult Surchage Amount</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>                                         
+                                    <input name="guest surcharge" placeholder="$dollar" [(ngModel)]="postData.tariff.guest_surcharge" type="text">
+                                </div>        
+                            </div> 
+                            <div class="field">
+                                <label for="children above">Children Surchage Above</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="child icon"></i>
+                                    </div>                                         
+                                    <input name="children above" placeholder="children num" [(ngModel)]="postData.tariff.child_above" type="text">
+                                </div>         
+                            </div>         
+                            <div class="field">
+                                <label for="children surcharge">Children Surchage Amount</label>
+                                <div class="ui labeled input">
+                                    <div class="ui label">
+                                        <i class="dollar icon"></i>
+                                    </div>                                         
+                                    <input name="children surcharge" placeholder="$dollar" [(ngModel)]="postData.tariff.child_surcharge" type="text">
+                                </div>        
+                            </div>                                                                                                                                                   
+                        </div>
+                    </div>                            
+                </div>     
+            </div>
+        </div>
+        <div class="sixteen wide column" [hidden]="dateData.season_exists =='no seasons'" style="">
+            <div class="ui styled accordion" style="width: 100%">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    <span>Season 1</span> &nbsp;&nbsp;&nbsp;
+                    <span>{{dateData.season1_start}} ~ {{dateData.season1_end}}</span>&nbsp;&nbsp;&nbsp;
+                    <span *ngIf="dateData.season_exists =='1 season 2 p'">{{dateData.season2_start}} ~ {{dateData.season2_end}} </span>
+                    <span class="season_base season-1" style="float: right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <div class="ui content form" style="width: 100%">
+                    <div class="6 fields">
+                        <div class="field">
+                            <label for="price type">Price Type</label>
+                            <div class="ui labeled input">
+                                <select #nightly class="ui fluid search dropdown" [(ngModel)]="postData.tariff.group1_rate_type" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+                                    <option [value]="'V'">Nightly Rate</option>
+                                    <option [value]="'F'">Factor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="base price">Nightly Price/Factor</label>
+                            <div class="ui labeled input">
+                                <div class="ui label">
+                                    <i class="icon" [ngClass]="nightly.value=='F'?'asterisk':'dollar'"></i>
+                                </div>
+                                <input name="base price" [placeholder]="nightly.value == 'F'?'Enter Rate, e.g. 1.1':'$dollar'" [(ngModel)]="postData.tariff.group1_nightly" type="text">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="base price">Optional Weekly</label>
+                            <div class="ui labeled input">
+                                <div class="ui label">
+                                    <i class="dollar icon"></i>
+                                </div>
+                                <input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.group1_optional_weekly" type="text">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="price type">Price Type</label>
+                            <div class="ui labeled input">
+                                <select #nightly class="ui fluid search dropdown" [(ngModel)]="postData.tariff.group1_perrata_type" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+                                    <option [value]="'PW'">Optional Weekly÷7</option>
+                                    <option [value]="'PN'">Use Nightly Rate</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sixteen wide column" [hidden]="dateData.season_exists != '2 seasons' ">
+            <div class="ui styled accordion">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Season 2 &nbsp;&nbsp;&nbsp;{{dateData.season2_start}} ~ {{dateData.season2_end}} 
+                    <span class="season_base season-2" style="float: right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <div class="ui content form">
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <date-bar [dateData]="dateData" [itemId]="itemId" (dateSliderUpdated)="dateSliderUpdated($event)"></date-bar>
+   </div>

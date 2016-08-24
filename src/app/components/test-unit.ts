@@ -277,13 +277,6 @@ export class TestUnit implements AfterViewInit, OnInit {
 
       // this.dateData.season1_start = this.postData.tariff.test_seasons_override
     })
-    this.rateCalcService.currentYBIResponse.subscribe((res: YBIExistingTariffResponse) => {
-      if (res.result && res.result.length > 0) {
-        this.existingTariff = res.result[0].total;
-        this.calcMessage = res.result[0].desc;
-        console.log(res.result[0]);
-      }
-    });
   }
 
   ngAfterViewInit() {

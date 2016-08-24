@@ -1,62 +1,62 @@
-   <div>
-   	<div class="ui grid" style="width: 100%">
-   		<div class="five wide column">
-   			<div class="ui segment raised" style="height: 200px">
-   				<div class="ui form">
-   					<select class="form-control" [(ngModel)]="dateData.season_exists" (ngModelChange)="seasonModeChange($event)" name="season_mode">
-   						<option [value]="'no seasons'">No Seasons</option>
-   						<option [value]="'1 season 1 p'">1 season (1 period)</option>
-   						<option [value]="'1 season 2 p'">1 season (2 periods)</option>
-   						<option [value]="'2 seasons'">2 seasons</option>
-   					</select>
-   				</div>
-   			</div>
+		<span class="four wide column">
+			<div class="ui form">
+				<select [(ngModel)]="dateData.season_exists" (ngModelChange)="seasonModeChange($event)" name="season_mode">
+					<option [value]="'no seasons'">No Seasons</option>
+					<option [value]="'1 season 1 p'">1 season (1 period)</option>
+					<option [value]="'1 season 2 p'">1 season (2 periods)</option>
+					<option [value]="'2 seasons'">2 seasons</option>
+				</select>
+			</div>
+		</span>
+
+		<span class="twelve wide column margin-v-20">{{dateData.status}}</span>
+
+		<date-bar class="sixteen wide column margin-v-20" [dateData]="dateData" [itemId]="itemId" (dateSliderUpdated)="dateSliderUpdated($event)"></date-bar>
+
+		<div class="four wide column">
+			<div class="ui styled accordion" style="width: 100%">
+				<div class="title">
+					<i class="dropdown icon"></i>
+					Booking Info &nbsp;&nbsp;&nbsp;{{dateData.los}} Nights
+				</div>
+				<div class="ui content form">
+					<div class="field">
+						<div class="ui labeled input">
+							<div class="ui label" style="width: 100px">
+								Arrival
+							</div>
+							<input name="base price" disabled style="width: 50px" placeholder="$dollar" [(ngModel)]="dateData.booking_arrival" type="text">
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui labeled input">
+							<div class="ui label" style="width: 100px">
+								Departure
+							</div>
+							<input name="base price" disabled style="width: 50px" placeholder="$dollar" [(ngModel)]="dateData.booking_departure" type="text">
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui labeled input">
+							<div class="ui label" style="width: 100px">
+								Adults
+							</div>
+							<input name="base price" style="width: 50px" placeholder="$dollar" [(ngModel)]="postData.user_input.guests.adults" type="text">
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui labeled input">
+							<div class="ui label" style="width: 100px">
+								Children
+							</div>
+							<input name="base price" style="width: 50px" placeholder="$dollar" [(ngModel)]="postData.user_input.guests.children" type="text">
+						</div>
+					</div>  					   					
+				</div>
+			</div>
    		</div>
-   		<div class="nine wide column">
-   			<div class="ui segment raised" style="height: 200px">
-   				<div class="ui grid">
-   					<div class="sixteen wide column"><b>Booking Info</b></div>
-   					<div class="row padding-v-5">
-   						<div class="three wide column"><b>Arr.</b></div>
-   						<div class="three wide column"><b>Dep.</b></div>
-   						<div class="two wide column"><b>LoS</b></div>
-   						<div class="four wide column"><b>Adults</b></div>
-   						<div class="four wide column"><b>Kids</b></div>
-   					</div>
-   					<div class="row padding-v-5">
-   						<div class="three wide column">{{dateData.booking_arrival}}</div>
-   						<div class="three wide column"> {{dateData.booking_departure}}</div>
-   						<div class="two wide column">{{dateData.los}}</div>
-   						<div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="postData.user_input.guests.adults"/></div>
-   						<div class="four wide column"><input style="width: 100%" type="text" [(ngModel)]="postData.user_input.guests.children"/></div>
-   					</div>
-   					<div class="eight wide column">{{dateData.status}}</div>
-   					<div class="eight wide column">{{dateData.session_exists}}</div>
-   				</div>
-   			</div>
-   		</div>
-   		<div class="two wide column" style="height: 200px">
-   			<div class=""><b>Existing Tariff</b></div>
-   			<div class="ui header orange">{{existingTariff}}</div>
-   			<div class="ui divider"></div>
-   			<div class=""><b>TCEF</b></div>
-   			<div class="ui header blue">{{tcefTariff}}</div>
-   		</div>
-   		<div class="eight wide column">
-   			<div class="ui segment raised">
-   				<div class="sixteen wide column"><b>Existing Tariff Calc Detail</b></div>
-   				<div class="ui divider"></div>
-   				<div [innerHtml]="calcMessage"></div>
-   			</div>
-   		</div>
-   		<div class="eight wide column">
-   			<div class="ui segment raised">
-   				<div class="sixteen wide column"><b>TCEF Calc Detail</b></div>
-   				<div class="ui divider"></div>
-   				<div></div>
-   			</div>
-   		</div>
-   		<div class="sixteen wide column">
+
+   		<div class="twelve wide column">
    			<div class="ui styled accordion" style="width: 100%">
    				<div class="title">
    					<i class="dropdown icon"></i>
@@ -196,7 +196,7 @@
    					<span class="season_base season-1" style="float: right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
    				</div>
    				<div class="ui content form" style="width: 100%">
-   					<div class="6 fields">
+   					<div class="four fields">
    						<div class="field">
    							<label for="price type">Price Type</label>
    							<div class="ui labeled input">
@@ -225,30 +225,281 @@
    							</div>
    						</div>
    						<div class="field">
-   							<label for="price type">Price Type</label>
+   							<label for="price type">Pro rata use</label>
    							<div class="ui labeled input">
-   								<select #nightly class="ui fluid search dropdown" [(ngModel)]="postData.tariff.group1_perrata_type" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.tariff.group1_perrata_type" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
    									<option [value]="'PW'">Optional Weekly÷7</option>
    									<option [value]="'PN'">Use Nightly Rate</option>
    								</select>
    							</div>
    						</div>
    					</div>
+   					<div class="ui divider"></div>
+   					<div class="five fields">
+   						<div class="field">
+   							<label for="price type">Apply Rule 1</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysid_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="''">No Rule</option>
+   									<option [value]="'RULE 1'">Apply Rule 1</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Condition</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysm_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'L'">Less then</option>
+   									<option [value]="'M'">More than</option>
+   									<option [value]="'E'">Equal to</option>
+   									<option [value]="'B'">Blocks Only</option>
+   									<option [value]="'b'">Blocks/pro rata</option>
+   									<option [value]="'E5'">5 Nights Stay</option>
+   									<option [value]="'D'">Days of Week</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Days/DoW</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="calendar icon"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="postData.rules.group1_adaysm_item1=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group1_adaysn_item1" type="text">
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Action</label>
+   							<div class="ui labeled input">
+   								<select #action class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysc_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'A'">Add Sum</option>
+   									<option [value]="'F'">Apply Factor</option>
+   									<option [value]="'P'">Force Price</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Action Value</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="icon" [ngClass]="action.value=='F'?'asterisk':'dollar'"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group1_adaysv_item1" type="text">
+   							</div>
+   						</div>
+   					</div>
+   					<div class="ui divider"></div>
+   					<div class="five fields">
+   						<div class="field">
+   							<label for="price type">Apply Rule 2</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysid_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="''">No Rule</option>
+   									<option [value]="'RULE 2'">Apply Rule 2</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Condition</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysm_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'L'">Less then</option>
+   									<option [value]="'M'">More than</option>
+   									<option [value]="'E'">Equal to</option>
+   									<option [value]="'B'">Blocks Only</option>
+   									<option [value]="'b'">Blocks/pro rata</option>
+   									<option [value]="'E5'">5 Nights Stay</option>
+   									<option [value]="'D'">Days of Week</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Days/DoW</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="calendar icon"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="postData.rules.group1_adaysm_item2=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group1_adaysn_item2" type="text">
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Action</label>
+   							<div class="ui labeled input">
+   								<select #action class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysc_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'A'">Add Sum</option>
+   									<option [value]="'F'">Apply Factor</option>
+   									<option [value]="'P'">Force Price</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Action Value</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="icon" [ngClass]="action.value=='F'?'asterisk':'dollar'"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group1_adaysv_item2" type="text">
+   							</div>
+   						</div>
+   					</div>
    				</div>
    			</div>
    		</div>
+
    		<div class="sixteen wide column" [hidden]="dateData.season_exists != '2 seasons' ">
-   			<div class="ui styled accordion">
+   			<div class="ui styled accordion" style="width: 100%">
    				<div class="title">
    					<i class="dropdown icon"></i>
    					Season 2 &nbsp;&nbsp;&nbsp;{{dateData.season2_start}} ~ {{dateData.season2_end}} 
    					<span class="season_base season-2" style="float: right">&nbsp;&nbsp;&nbsp;&nbsp;</span>
    				</div>
-   				<div class="ui content form">
+   				<div class="ui content form" style="width: 100%">
+				   	<div class="four fields">
+   						<div class="field">
+   							<label for="price type">Price Type</label>
+   							<div class="ui labeled input">
+   								<select #nightly class="ui fluid search dropdown" [(ngModel)]="postData.tariff.group2_rate_type" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'V'">Nightly Rate</option>
+   									<option [value]="'F'">Factor</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Nightly Price/Factor</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="icon" [ngClass]="nightly.value=='F'?'asterisk':'dollar'"></i>
+   								</div>
+   								<input name="base price" [placeholder]="nightly.value == 'F'?'Enter Rate, e.g. 1.1':'$dollar'" [(ngModel)]="postData.tariff.group2_nightly" type="text">
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Optional Weekly</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="dollar icon"></i>
+   								</div>
+   								<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.group2_optional_weekly" type="text">
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Pro rata use</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.tariff.group2_perrata_type" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'PW'">Optional Weekly÷7</option>
+   									<option [value]="'PN'">Use Nightly Rate</option>
+   								</select>
+   							</div>
+   						</div>
+   					</div>
+   					<div class="ui divider"></div>
+   					<div class="five fields">
+   						<div class="field">
+   							<label for="price type">Apply Rule 1</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysid_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="''">No Rule</option>
+   									<option [value]="'RULE 1'">Apply Rule 1</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Condition</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysm_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'L'">Less then</option>
+   									<option [value]="'M'">More than</option>
+   									<option [value]="'E'">Equal to</option>
+   									<option [value]="'B'">Blocks Only</option>
+   									<option [value]="'b'">Blocks/pro rata</option>
+   									<option [value]="'E5'">5 Nights Stay</option>
+   									<option [value]="'D'">Days of Week</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Days/DoW</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="calendar icon"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="postData.rules.group2_adaysm_item1=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group2_adaysn_item1" type="text">
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Action</label>
+   							<div class="ui labeled input">
+   								<select #action2 class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysc_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'A'">Add Sum</option>
+   									<option [value]="'F'">Apply Factor</option>
+   									<option [value]="'P'">Force Price</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Action Value</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="icon" [ngClass]="action2.value=='F'?'asterisk':'dollar'"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="action2.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group2_adaysv_item1" type="text">
+   							</div>
+   						</div>
+   					</div>
+   					<div class="ui divider"></div>
+   					<div class="five fields">
+   						<div class="field">
+   							<label for="price type">Apply Rule 2</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysid_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="''">No Rule</option>
+   									<option [value]="'RULE 2'">Apply Rule 2</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Condition</label>
+   							<div class="ui labeled input">
+   								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysm_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'L'">Less then</option>
+   									<option [value]="'M'">More than</option>
+   									<option [value]="'E'">Equal to</option>
+   									<option [value]="'B'">Blocks Only</option>
+   									<option [value]="'b'">Blocks/pro rata</option>
+   									<option [value]="'E5'">5 Nights Stay</option>
+   									<option [value]="'D'">Days of Week</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Days/DoW</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="calendar icon"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="postData.rules.group2_adaysm_item2=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group2_adaysn_item2" type="text">
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="price type">Action</label>
+   							<div class="ui labeled input">
+   								<select #action class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysc_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
+   									<option [value]="'A'">Add Sum</option>
+   									<option [value]="'F'">Apply Factor</option>
+   									<option [value]="'P'">Force Price</option>
+   								</select>
+   							</div>
+   						</div>
+   						<div class="field">
+   							<label for="base price">Action Value</label>
+   							<div class="ui labeled input">
+   								<div class="ui label">
+   									<i class="icon" [ngClass]="action.value=='F'?'asterisk':'dollar'"></i>
+   								</div>
+   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group2_adaysv_item2" type="text">
+   							</div>
+   						</div>
+   					</div>
    				</div>
    			</div>
    		</div>
-   	</div>
-   	<br />
-   	<date-bar [dateData]="dateData" [itemId]="itemId" (dateSliderUpdated)="dateSliderUpdated($event)"></date-bar>
-   </div>

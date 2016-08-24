@@ -44,26 +44,40 @@ export class RateCalcService {
                 },
                 "test_seasons_override": {
                     "1": {
+                        "name": "Blue Season",
                         "pairs": [
-                            // {
-                            //     "to": "25/08/2017",
-                            //     "from": "22/08/2017"
-                            // },
                             {
-                                "from": "31/08/2017",
-                                "to": "07/09/2017"
+                                "to": "25/08/2017",
+                                "from": "22/08/2017"
+                            },
+                            {
+                                "from": "15/09/2017",
+                                "to": "22/09/2017"
                             }
                         ]
                     },
-                    // "2": {
-                    //     "pairs": [
-                    //         {
-                    //             "from": "1/9/2017",
-                    //             "to": "18/9/2017"
-                    //         }
-                    //     ]
-                    // }
+                    "2": {
+                        "name": "Orange Season",
+                        "pairs": [
+                            {
+                                "from": "15/9/2017",
+                                "to": "22/9/2017"
+                            }
+                        ]
+                    }
                 }
+            },
+            rules: {
+                "group1_adaysc_item1": "P",
+                "group1_adaysid_item1": "RULE 1",
+                "group1_adaysm_item1": "M",
+                "group1_adaysn_item1": 20,
+                "group1_adaysv_item1": 201,
+                "group1_adaysc_item2": "P",
+                "group1_adaysid_item2": "RULE 2",
+                "group1_adaysm_item2": "L",
+                "group1_adaysn_item2": 30,
+                "group1_adaysv_item2": 168
             }
         };
     }
