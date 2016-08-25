@@ -16,7 +16,7 @@
 
     @Directive({
         selector: 'input,select',
-        host: { '(blur)': 'onBlur($event)' }
+        host: { '(blur)': 'onBlur($event)' , '(contextmenu)': 'onContextMenu($event)'}
     })
     export class BlurForwarder {
         constructor(private elRef: ElementRef, private renderer: Renderer) { }
@@ -28,5 +28,11 @@
             // or just 
             // el.dispatchEvent(new CustomEvent('input-blur', { bubbles: true }));
             // if you don't care about webworker compatibility
+        }
+
+        onContextMenu($event) {
+            console.log("=== context menu ===");
+            console.log(this.elRef.nativeElement);
+            return false;
         }
     }

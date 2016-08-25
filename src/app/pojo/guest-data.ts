@@ -1,5 +1,5 @@
 
 export interface GuestData {
-    adults: number,
-    children: number
+    adults?: number,
+    children?: number
 }

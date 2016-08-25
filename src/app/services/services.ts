@@ -1,5 +1,6 @@
 import {dateDataServiceInjectable} from './dateData.service';
-import {RateCalcService} from './rate-calc.service';
+import {rateCalcServiceInjectable} from './rate-calc.service';
+import {testDataGeneratorServiceInjectable} from './test-data-generator.service';
 // import {threadsServiceInjectables} from './ThreadsService';
 // import {userServiceInjectables} from './UserService';
 
@@ -10,5 +11,6 @@ export * from './dateData.service';
 
 export var servicesInjectables: Array<any> = [
   dateDataServiceInjectable,
-  RateCalcService
+  rateCalcServiceInjectable,
+  testDataGeneratorServiceInjectable
 ];

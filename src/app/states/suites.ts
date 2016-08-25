@@ -2,8 +2,12 @@ import  {Component, Input, Directive} from '@angular/core';
 
 import {DateData} from '../pojo/date-data';
 import {GuestData} from '../pojo/guest-data';
+import {RatePostData} from '../pojo/post-data';
+import {TestDataGeneratorService} from '../services/test-data-generator.service';
+import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
 
 import {TestPlanItem} from '../pojo/test-plan';
+import {TestVectors} from '../services/test-vector.service';
 
 import {TestUnit} from '../components/test-unit';
 
@@ -38,6 +42,59 @@ export class Suites {
         season_exists: "2 seasons"
     };
 
-    constructor() {
+    runTest(suiteNo: number): void {
+        let baseData = TestDataGeneratorService.generateBaseTestingData(suiteNo);
+        let testData: RatePostData[];
+        testData = [
+            this.testDataGeneratorService.generateTestingData(TestDataGeneratorService.generateBaseTestingData(suiteNo), {
+                tariff: {
+                    base_nightly: 130
+                }
+            }),
+            this.testDataGeneratorService.generateTestingData(TestDataGeneratorService.generateBaseTestingData(suiteNo), {
+                tariff: {
+                    base_nightly: 120
+                }
+            })
+        ];
+        let testStream = this.testDataGeneratorService.createTestSquence(testData);
+        testStream.subscribe((a: YBIExistingTariffResponse) => {
+            console.log(a.result[0].total);
+        });
+        console.log(testData);
+    }
+
+    constructor(public testDataGeneratorService: TestDataGeneratorService) {
+        // this.runTest(1);
+        // let change = {
+        let change = {
+            user_input: {
+                guests: {
+                    adults: "*ALL*",
+                    children: 0
+                }
+            },
+            tariff: {
+                base_nightly: "*ALL*"
+            }
+        };
+
+        let postArray: RatePostData[] = this.testDataGeneratorService.generateAllTestingDataWithSpec(TestDataGeneratorService.generateBaseTestingData(1),
+            change,
+            {
+                user_input: {
+                    guests: {
+                        adults: [1, 2, 3],
+                    }
+                },
+                tariff: {
+                    base_nightly: [100, 101]
+                }
+            }
+        );
+
+        this.testDataGeneratorService.createTestSquence(postArray).subscribe((d) => console.log(d));
+
+        console.log(postArray);
     }
 }
