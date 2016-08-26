@@ -6,7 +6,7 @@ import {trace, UIROUTER_PROVIDERS, UIView, UIRouterConfig, Category, UIROUTER_DI
 import {MyUIRouterConfig} from "./app/router.config";
 
 import {LocationStrategy, HashLocationStrategy, PathLocationStrategy, PlatformLocation} from "@angular/common";
-import {BROWSER_PROVIDERS, BrowserPlatformLocation} from '@angular/platform-browser';
+import {BrowserPlatformLocation} from '@angular/platform-browser';
 import { PLATFORM_DIRECTIVES} from "@angular/core";
 import {servicesInjectables} from './app/services/services';
 import {AuthDao} from './app/components/hack-http-check';
@@ -14,6 +14,8 @@ import {AuthDao} from './app/components/hack-http-check';
 // import 'vendor/jquery/dist/jquery.js';
 // import 'vendor/jquery-ui-dist/jquery-ui.js';
 import 'semantic-ui-css/semantic.min.js';
+// import 'vendor/ng2-table/bundles/ng2-table.js';
+// import 'vendor/ng2-bootstrap/bundles/ng2-bootstrap.js';
 
 if (environment.production) {
   enableProdMode();
@@ -26,9 +28,10 @@ class FakeXSRFStrategy implements XSRFStrategy {
 }
 
 const XRSF_MOCK = provide(XSRFStrategy, { useValue: new FakeXSRFStrategy() });
-ReflectiveInjector.resolveAndCreate([...HTTP_PROVIDERS, XRSF_MOCK, AuthDao])
-  .get(AuthDao)
-  .check()
+
+// ReflectiveInjector.resolveAndCreate([...HTTP_PROVIDERS, XRSF_MOCK, AuthDao])
+//   .get(AuthDao)
+//   .check()
 
 // http.get('data.json').map(res => res.json())
 //     .subscribe(data => {

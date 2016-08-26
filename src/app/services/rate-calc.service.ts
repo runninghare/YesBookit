@@ -84,7 +84,7 @@ export class RateCalcService {
 
     currentPostData: Subject<RatePostData> = new BehaviorSubject<RatePostData>(null);
 
-    currentYBIResponse: Observable<YBIExistingTariffResponse>;
+    currentYBIResponse: Subject<YBIExistingTariffResponse> = new BehaviorSubject<YBIExistingTariffResponse>(null);
 
     public setCurrentPostData(postData: RatePostData): void {
         this.currentPostData.next(postData);

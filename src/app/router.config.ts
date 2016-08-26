@@ -21,6 +21,8 @@ export class MyUIRouterConfig {
     INITIAL_STATES.forEach(state => uiRouter.stateRegistry.register(state));
 
     // Define a default behavior, for when the URL matched no routes
-    uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.suites", {testPlan: new TestPlanItem("Suite 1", "Property Tariff tests without seasonal settings", 5)}, null) && null);
+    // uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.suites", {testPlan: new TestPlanItem("Suite 1", "Property Tariff tests without seasonal settings", 5)}, null) && null);
+    // uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.arbitrary", null, null) && null);
+    uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.spike", null, null) && null);
   }
 }

@@ -17,7 +17,7 @@ module.exports = function(defaults) {
       'semantic-ui-css/themes/**/*',
       'ui-router-ng2/_bundles/ui-router-ng2.min.js',
       'jquery-ui-dist/jquery-ui.min.{js,css}',
-      'ng2-radio-group/*.js'
+      'moment/min/moment.min.js',
     ]
   });
 };

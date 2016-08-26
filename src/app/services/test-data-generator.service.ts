@@ -48,7 +48,19 @@ export class TestDataGeneratorService {
                         },
                         "test_seasons_override": {
                         }
-                    }
+                    },
+                                rules: {
+                "group1_adaysc_item1": "P",
+                "group1_adaysid_item1": "RULE 1",
+                "group1_adaysm_item1": "M",
+                "group1_adaysn_item1": 20,
+                "group1_adaysv_item1": 201,
+                "group1_adaysc_item2": "P",
+                "group1_adaysid_item2": "RULE 2",
+                "group1_adaysm_item2": "L",
+                "group1_adaysn_item2": 30,
+                "group1_adaysv_item2": 168
+            }
                 };
             case 2:
             case 3:

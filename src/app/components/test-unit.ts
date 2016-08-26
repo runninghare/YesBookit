@@ -19,7 +19,7 @@ declare var $: JQueryStatic;
   selector: "test-unit",
   templateUrl: "views/test-unit.html",
   directives: [FORM_DIRECTIVES, DateBarComponent, BlurForwarder],
-  inputs: ['dateData', 'itemId'],
+  inputs: ['postData', 'itemId'],
   host: { '(input-blur)': 'onInputBlur($event)' },
 })
 export class TestUnit implements AfterViewInit, OnInit {
@@ -232,9 +232,7 @@ export class TestUnit implements AfterViewInit, OnInit {
 
   itemId: number;
 
-  ngOnInit() {
-    this.rateCalcService.currentPostData.subscribe((postData: RatePostData) => {
-      this.postData = postData;
+  updateDtWithPostData(postData: RatePostData): void {
       var user_input: UserInputData;
       if (Array.isArray(postData.user_input)) {
         user_input = postData.user_input[0];
@@ -259,7 +257,6 @@ export class TestUnit implements AfterViewInit, OnInit {
         } else if (postData.tariff.test_scheme_override.groups.length == 1) {
           let group1: GroupData = postData.tariff.test_seasons_override[1];
           if (group1.pairs.length > 1) {
-            console.log(group1.pairs[0].from);
             this.dateData.season_exists = "1 season 2 p"
             this.dateData.season1_start = this.dt_d2s(group1.pairs[0].from);
             this.dateData.season1_end = this.dt_d2s(group1.pairs[0].to);
@@ -274,9 +271,21 @@ export class TestUnit implements AfterViewInit, OnInit {
       }
 
       this.dateDataService.setCurrentDateData(this.dateData);
+  }
 
+  ngOnInit() {
+    this.rateCalcService.currentPostData.subscribe((postData: RatePostData) => {
+      this.postData = postData;
+      this.updateDtWithPostData(postData);
       // this.dateData.season1_start = this.postData.tariff.test_seasons_override
-    })
+    });
+
+    this.rateCalcService.currentYBIResponse.subscribe((res: YBIExistingTariffResponse) => {
+      if (res && res.post_data) {
+        this.postData = res.post_data;
+        this.updateDtWithPostData(res.post_data);
+      }
+    });
   }
 
   ngAfterViewInit() {

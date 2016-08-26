@@ -2,6 +2,7 @@
  import {Suites} from "./states/suites";
  import {ArbitraryTest} from "./states/arbitrary-test";
  import {Ng2StateDeclaration, Transition} from "ui-router-ng2";
+ import {MySpike} from "./components/my-spike";
 
  // The top level states
 let MAIN_STATES: Ng2StateDeclaration[] = [
@@ -29,6 +30,10 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
         }
       }
     ]
+  },
+  {
+    name: 'app.spike',
+    component: MySpike
   }
 ];
 

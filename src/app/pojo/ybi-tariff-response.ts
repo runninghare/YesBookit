@@ -1,3 +1,4 @@
+import {RatePostData} from './post-data';
 
 export interface YBIExistingTariffResponseResult {
     day?: string;
@@ -21,4 +22,5 @@ export interface YBIExistingTariffResponseResult {
 export interface YBIExistingTariffResponse {
     tariff_file: string;
     result: YBIExistingTariffResponseResult[];
+    post_data: RatePostData;
 }

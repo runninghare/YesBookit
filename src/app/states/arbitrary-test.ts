@@ -59,13 +59,18 @@ export class ArbitraryTest {
     existingBooking: number;
     calcMessage: string;
 
+    postData: RatePostData;
+
     constructor(public rateCalcService: RateCalcService, public http: Http) {
         rateCalcService.setCurrentPostData(RateCalcService.generateDummyPostData());
-        rateCalcService.currentYBIResponse = rateCalcService.currentPostData.flatMap((postData: RatePostData) =>
-            http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()));
+        rateCalcService.currentPostData.flatMap((postData: RatePostData) =>
+            http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
+        .subscribe((result: YBIExistingTariffResponse) => {
+            rateCalcService.currentYBIResponse.next(result);
+        });
 
         this.rateCalcService.currentYBIResponse.subscribe((res: YBIExistingTariffResponse) => {
-            if (res.result && res.result.length > 0) {
+            if (res && res.result && res.result.length > 0) {
                 this.existingTotal = res.result[0].total;
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;
@@ -73,7 +78,7 @@ export class ArbitraryTest {
                 this.existingClean = res.result[0].clean;
                 this.existingBond = res.result[0].bond;
                 this.calcMessage = res.result[0].desc;
-                console.log(res.result[0]);
+                // console.log(res.result[0]);
             }
         });
     }

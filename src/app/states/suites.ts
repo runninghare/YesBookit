@@ -8,6 +8,7 @@ import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
 
 import {TestPlanItem} from '../pojo/test-plan';
 import {TestVectors} from '../services/test-vector.service';
+import {RateCalcService} from '../services/rate-calc.service';
 
 import {TestUnit} from '../components/test-unit';
 
@@ -61,18 +62,20 @@ export class Suites {
         testStream.subscribe((a: YBIExistingTariffResponse) => {
             console.log(a.result[0].total);
         });
-        console.log(testData);
+        // console.log(testData);
     }
 
-    constructor(public testDataGeneratorService: TestDataGeneratorService) {
+    constructor(public testDataGeneratorService: TestDataGeneratorService, public rateCalcService: RateCalcService) {
         // this.runTest(1);
         // let change = {
         let change = {
             user_input: {
                 guests: {
                     adults: "*ALL*",
-                    children: 0
-                }
+                    children: "*ALL*"
+                },
+                arrival: "*ALL*",
+                departure: "*ALL*"
             },
             tariff: {
                 base_nightly: "*ALL*"
@@ -84,16 +87,30 @@ export class Suites {
             {
                 user_input: {
                     guests: {
-                        adults: [1, 2, 3],
-                    }
+                        adults: [1],
+                        children: [1]
+                    },
+                    arrival: [
+                        [2017, 8, 15],
+                        [2017, 8, 16],
+                        [2017, 8, 20]
+                    ],
+                    departure: [
+                        [2017, 9, 15],
+                        [2017, 9, 16],
+                        [2017, 9, 20]
+                    ]
                 },
                 tariff: {
-                    base_nightly: [100, 101]
+                    base_nightly: [100, 101, 102, 105, 200, 300,400,500]
                 }
             }
         );
 
-        this.testDataGeneratorService.createTestSquence(postArray).subscribe((d) => console.log(d));
+        this.testDataGeneratorService.createTestSquence(postArray).subscribe((res: YBIExistingTariffResponse) => {
+            console.log(res.result[0].total);
+            this.rateCalcService.currentYBIResponse.next(res);
+        });
 
         console.log(postArray);
     }
