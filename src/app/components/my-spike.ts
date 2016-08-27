@@ -97,7 +97,7 @@ export class MySpike {
 	tableActions: UITableAction;
 
 	tableOptions: UiTableOptions = {
-		itemsPerPage: 10
+		itemsPerPage: 8
 	};
 
 	constructor() {

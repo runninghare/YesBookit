@@ -46,7 +46,7 @@ interface OrderType {
     </tr>
   </thead>
   <tbody>
-    <tr 	*ngFor="let row of orderedData$ | async" 
+    <tr 	*ngFor="let row of pagedData$ | async" 
           	[class]="tableActions.applyRowClasses(row)" 
           	(click)="tableActions.clickRow(row)"
           >
@@ -55,37 +55,44 @@ interface OrderType {
         </td>
     </tr>
   </tbody>
-  <tfoot>
-    <tr><th colspan="3">
-      <div class="ui right floated pagination menu">
-        <a (click)="currentPage$.next(currentPage-1)" class="icon item">
-          <i class="left chevron icon"></i>
-        </a>
-        <a (click)="currentPage$.next(p)" class="item" *ngFor="let p of [1,2,3,4]">{{p}}</a>
-        <a class="icon item">
-          <i class="right chevron icon"></i>
-        </a>
-      </div>
-    </th>
-  </tr></tfoot>
-</table>    
+</table>   
+<div class="ui grid" *ngIf="pageTotal > 1">
+  	<div class="four column row">
+  	<div class="left floated column">Items {{indexBegin+1}} - {{indexEnd}} / {{itemsTotal}} </div>
+  	<div class="right floated column">
+  		  <a href="" (click)="setCurrentPage(currentPage-1)" class="icon item">
+	          <i class="left chevron icon"></i>
+	        </a>
+	        Page 
+	        <input [(ngModel)]="currentPage" (ngModelChange)="setCurrentPage(currentPage)" style="width: 40px" type="number" />
+	         of {{pageTotal}}
+	        <a href="" (click)="setCurrentPage(currentPage+1)" class="icon item">
+	          <i class="right chevron icon"></i>
+	        </a>
+  	</div>
+       <!-- <div class="ui right floated pagination menu">
+	        <a (click)="setCurrentPage(currentPage-1)" class="icon item">
+	          <i class="left chevron icon"></i>
+	        </a>
+	        <a (click)="setCurrentPage(p)" class="item" *ngFor="let p of getPageSequence()">{{p}}</a>
+	        <a (click)="setCurrentPage(currentPage+1)" class="icon item">
+	          <i class="right chevron icon"></i>
+	        </a>
+       </div> -->
+  </div> 
     `,
-    inputs: ['tableConfig', 'tableActions', 'dataSource']
+    inputs: ['tableConfig', 'tableActions', 'dataSource', 'tableOptions']
 })
 export class UiTable implements OnInit {
 
     tableConfig: UiTableConfig[];
     tableActions: any;
-    tableOptions: UiTableOptions;
+    tableOptions: UiTableOptions = {
+    	itemsPerPage: 10
+    }
 
     tableData: Object[];
     dataSource: Observable<Object[]>;
-
-    currentPage: number = 1;
-    currentPage$: Subject<number> = new BehaviorSubject<number>(null);
-
-    lastPage: number = 1;
-    lastPage$: Subject<number> = new BehaviorSubject<number>(null);
 
     filter: Object = {};
     filter$: Subject<Object> = new BehaviorSubject<Object>(null);
@@ -95,8 +102,13 @@ export class UiTable implements OnInit {
     orderBy$: Subject<Object[]> = new BehaviorSubject<Object[]>(null);
     orderedData$: Observable<Object[]>;
 
-    pageNum: number;
-    pageNum$: Observable<number>;
+    pageTotal: number = 1;
+    currentPage: number = 1;
+    itemsTotal: number = 0;
+    indexBegin: number = 0;
+    indexEnd: number = 0;
+    currentPage$: Subject<number> = new BehaviorSubject<number>(1);
+    pagedData$: Observable<Object[]>;
 
     filterUpdate(val): void {
     	console.log(this.filter);
@@ -119,12 +131,17 @@ export class UiTable implements OnInit {
     	return false;
     }
 
+    getPageSequence(): number[] {
+    	return Array.apply(null, Array(this.pageTotal)).map((e, i) => i+1);
+    }
+
+    setCurrentPage(p: number): boolean {
+    	this.currentPage = Math.min(Math.max(p, 1), this.pageTotal);
+    	this.currentPage$.next(this.currentPage);
+    	return false;
+    }
+
     ngOnInit(): void {
-    	
-    	this.currentPage$.subscribe((p) => {
-    		this.currentPage = Math.max(p, 1);
-    		console.log(this.currentPage);
-    	});
 
 	this.filteredData$ = this.filter$.combineLatest(this.dataSource, (x: Object, y: Object[]) => {
 		if (!x || typeof x != "object") return y;
@@ -137,18 +154,35 @@ export class UiTable implements OnInit {
 		// return <Object[]>(x.reduce((pre: any[], elem) => pre.sort((a,b) => (a[elem.name] < b[elem.name])?elem.order:(a[elem.name] > b[elem.name])?-(elem.order):0), y));
 	});
 
-	// --- test ---
+	this.pagedData$ = this.currentPage$.combineLatest(this.orderedData$, (x: number, y: Object[]) => {
+		let itemPerPage = (this.tableOptions && this.tableOptions.itemsPerPage) || 10;
+		let indexBegin = this.indexBegin = (x-1) * itemPerPage;
+		let indexEnd = this.indexEnd = Math.min(itemPerPage + indexBegin, y.length);
 
-	this.orderedData$.subscribe((o: Object) => {
-		console.log("=== ordered objects ===");
-		console.log(o);
+		console.log(`x = ${x}, indexBegin = ${indexBegin}, length = ${length}`);
+
+		return y.slice(indexBegin, indexEnd);
 	});
 
-	this.orderBy$.subscribe((elem: OrderType[]) => console.log(elem));
+	// ====== subscriptions =========
 
-	// this.filter$.next({status: "Great", notes: "Mid-Fielder"});
-	this.orderBy = [{name:"status", order: -1}, {name: "name", order: -1}];
-	this.orderBy$.next(this.orderBy);
+	this.filteredData$.subscribe((elem: Object[]) => {
+		this.itemsTotal = elem.length;
+		this.pageTotal = Math.ceil(elem.length / ((this.tableOptions && this.tableOptions.itemsPerPage) || 10));
+		console.log(`Total Page = ${this.pageTotal}`);
+	});
+
+	// --- test ---
+
+	// this.orderedData$.subscribe((o: Object) => {
+	// 	console.log("=== ordered objects ===");
+	// 	console.log(o);
+	// });
+
+	// this.orderBy$.subscribe((elem: OrderType[]) => console.log(elem));
+
+	// this.orderBy = [{name:"status", order: -1}, {name: "name", order: -1}];
+	// this.orderBy$.next(this.orderBy);
 
     }
 
@@ -157,7 +191,6 @@ export class UiTable implements OnInit {
     }
 
     constructor() {
-
     }
 
 }
