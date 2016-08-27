@@ -12,6 +12,7 @@ import {DateDataService} from '../services/dateData.service';
 import {RateCalcService} from '../services/rate-calc.service';
 
 import {BlurForwarder} from '../directives/common';
+import {Observable, Subject, BehaviorSubject} from 'rxjs/Rx';
 
 declare var $: JQueryStatic;
 
@@ -23,6 +24,9 @@ declare var $: JQueryStatic;
   host: { '(input-blur)': 'onInputBlur($event)' },
 })
 export class TestUnit implements AfterViewInit, OnInit {
+
+  testUnitInputChange: Subject<any> = new BehaviorSubject<any>(null);
+  debouncedTestUnitInputChange: Observable<any> = this.testUnitInputChange.debounceTime(300);
 
   dateSliderUpdated(dt: DateData): void {
     this.updatePostWithDateData(dt);
@@ -293,10 +297,13 @@ export class TestUnit implements AfterViewInit, OnInit {
   }
 
   onInputBlur(value: any): void {
-    this.rateCalcService.setCurrentPostData(this.postData);
+    this.testUnitInputChange.next(1);
   }
 
   constructor(public dateDataService: DateDataService, public rateCalcService: RateCalcService) {
+    this.debouncedTestUnitInputChange.subscribe(() => {
+      this.rateCalcService.setCurrentPostData(this.postData);
+    });
     //this.dateDataService.setCurrentDateData(this.dateData);
     // setTimeout(() => {
     //   this.dateData.season_exists = "1 season 1 p";

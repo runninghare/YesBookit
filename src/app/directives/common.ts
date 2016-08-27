@@ -16,7 +16,7 @@
 
     @Directive({
         selector: 'input,select',
-        host: { '(blur)': 'onBlur($event)' , '(contextmenu)': 'onContextMenu($event)'}
+        host: { '(blur)': 'onBlur($event)' , '(contextmenu)': 'onContextMenu($event)', '(ngModelChange)':'onBlur($event)'}
     })
     export class BlurForwarder {
         constructor(private elRef: ElementRef, private renderer: Renderer) { }

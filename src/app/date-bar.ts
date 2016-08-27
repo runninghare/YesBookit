@@ -58,7 +58,7 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
 
         // this.dateSliderStreamReady.emit(mergedDateStream);
 
-        this.mergedDateStream = mergedDateStream.debounceTime(500);
+        this.mergedDateStream = mergedDateStream.debounceTime(300);
 
         this.mergedDateStream.subscribe((dt: DateData) => {this.dateSliderUpdated.emit(dt)});
     }
