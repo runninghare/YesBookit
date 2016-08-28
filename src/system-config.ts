@@ -5,15 +5,14 @@
 const map: any = {
   'semantic-ui-css': 'vendor/semantic-ui-css',
   'ui-router-ng2':  'vendor/ui-router-ng2/_bundles/ui-router-ng2.min.js',
-  'moment':  'vendor/moment/min/moment.min.js',
+  'moment':  'vendor/moment/min/moment.min.js'
   // 'ng2-table':  'vendor/ng2-table/bundles/ng2-table.js',
-  // 'ng2-table':  'vendor/ng2-table/ng2-table.js',
-  // 'ng2-table/components/table/ng-table.component':  'vendor/ng2-table/components/table/ng-table.component.js',
-  // 'ng2-table/components/ng-table-directive':  'vendor/ng2-table/components/ng-table-directives.js',
+  // 'ng2-table':  'vendor/ng2-table/ng2-table.js'
 };
 
 /** User packages configuration. */
 const packages: any = {
+  'moment':                     { main: 'moment.min.js', defaultExtension: 'js'}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@ import {Component, Injectable, bind, OnInit} from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import {DateData} from '../pojo/date-data';
 import {UserInputData} from '../pojo/user-input-data';
+import {GuestData} from '../pojo/guest-data';
 import {TariffData} from '../pojo/tariff-data';
 import {RulesData} from '../pojo/rules-data';
 import {RatePostData} from '../pojo/post-data';
@@ -11,6 +12,7 @@ import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
 import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 import {RateCalcService} from './rate-calc.service';
 import {TestVectors} from './test-vector.service';
+import {TestDataRow} from '../pojo/test-plan';
 
 declare var $: JQueryStatic;
 
@@ -159,6 +161,11 @@ export class TestDataGeneratorService {
         // return Observable.concat(postArray.map((postData: RatePostData) =>
         //      this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json())
         //     ));
+
+        // return Observable.from(postArray).flatMap((postData) =>
+        //     this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData))).map((res: Response) => <YBIExistingTariffResponse>res.json());
+
+        // concat solution
         let httpReses: Observable<YBIExistingTariffResponse>[] = postArray.map((postData) =>
             this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json())
         )
@@ -183,6 +190,107 @@ export class TestDataGeneratorService {
             let baseCopy = $.extend(true, {}, base);
             return $.extend(true, baseCopy, changeCopy);
         });
+    }
+
+    ybiResponseToTableRow(res: YBIExistingTariffResponse): TestDataRow {
+        let row: TestDataRow = {};
+
+        if (res.post_data) {
+                    let user_input: UserInputData = <UserInputData>res.post_data.user_input;
+
+                    if (user_input) {
+                        row.arrival = user_input.arrival.join("/");
+                        row.departure = user_input.departure.join("/");
+
+                        let arrival = moment(row.arrival, "yyyy/MM/DD");
+                        let departure = moment(row.departure, "yyyy/MM/DD");
+                        let duration = (departure.diff(arrival))/86400000;
+                        row.los = duration;
+
+                        let guests: GuestData = <GuestData>user_input.guests;
+
+                        if (guests) {
+                            row.adults = guests.adults;
+                            row.children = guests.children;
+                        }
+                    }
+
+                    if (res.post_data.tariff)  {
+                        let tariff: TariffData = res.post_data.tariff;
+                        row.basePrice = tariff.base_nightly;
+                        row.bookingFee = tariff.booking_fee;
+                        row.cleaningBase = tariff.cpb;
+                        row.cleaningPricePerBlock = tariff.cpd;
+                        row.cleaningDayBlock = tariff.cds;
+                        row.adultsAbove = tariff.guest_above;
+                        row.adultsSurchargeAbove = tariff.guest_surcharge;
+                        row.childrenAbove = tariff.child_above;
+                        row.childrenSurchargeAbove = tariff.child_surcharge;
+
+                        row.season1PriceType = tariff.group1_rate_type;
+                        row.season1PriceOrFactor = tariff.group1_nightly;
+                        row.season1OptionalWeekly = tariff.group1_optional_weekly;
+                        row.season1ProRataUse = tariff.group1_perrata_type;
+
+                        row.season2PriceType = tariff.group2_rate_type;
+                        row.season2PriceOrFactor = tariff.group2_nightly;
+                        row.season2OptionalWeekly = tariff.group2_optional_weekly;
+                        row.season2ProRataUse = tariff.group2_perrata_type;
+
+                        if (tariff.test_seasons_override && tariff.test_seasons_override[1]) {
+                            if (tariff.test_seasons_override[1].pairs.length > 0) {
+                                row.season1P1Start = tariff.test_seasons_override[1].pairs[0].from;
+                                row.season1P1End = tariff.test_seasons_override[1].pairs[0].to;
+                                if (tariff.test_seasons_override[1].pairs.length > 2) {
+                                    row.season1P2Start = tariff.test_seasons_override[1].pairs[1].from;
+                                    row.season1P2End = tariff.test_seasons_override[1].pairs[1].to;
+                                }
+                            }
+                        }
+
+                        if (tariff.test_seasons_override && tariff.test_seasons_override[2]) {
+                            if (tariff.test_seasons_override[2].pairs.length > 0) {
+                                row.season2P1Start = tariff.test_seasons_override[2].pairs[0].from;
+                                row.season2P1End = tariff.test_seasons_override[2].pairs[0].to;
+                            }
+                        }
+                    }
+
+                    if (res.post_data.rules) {
+                        let rules: RulesData = res.post_data.rules;
+                        row.season1Rule1Name = rules.group1_adaysid_item1;
+                        row.season1Rule1ConditionName = rules.group1_adaysm_item1;
+                        row.season1Rule1ConditionValue = rules.group1_adaysn_item1;
+                        row.season1Rule1ActionName = rules.group1_adaysc_item1;
+                        row.season1Rule1ActionValue = rules.group1_adaysv_item1;
+
+                        row.season1Rule2Name = rules.group1_adaysid_item2;
+                        row.season1Rule2ConditionName = rules.group1_adaysm_item2;
+                        row.season1Rule2ConditionValue = rules.group1_adaysn_item2;
+                        row.season1Rule2ActionName = rules.group1_adaysc_item2;
+                        row.season1Rule2ActionValue = rules.group1_adaysv_item2;
+
+                        row.season2Rule1Name = rules.group2_adaysid_item1;
+                        row.season2Rule1ConditionName = rules.group2_adaysm_item1;
+                        row.season2Rule1ConditionValue = rules.group2_adaysn_item1;
+                        row.season2Rule1ActionName = rules.group2_adaysc_item1;
+                        row.season2Rule1ActionValue = rules.group2_adaysv_item1;
+
+                        row.season2Rule2Name = rules.group2_adaysid_item2;
+                        row.season2Rule2ConditionName = rules.group2_adaysm_item2;
+                        row.season2Rule2ConditionValue = rules.group2_adaysn_item2;
+                        row.season2Rule2ActionName = rules.group2_adaysc_item2;
+                        row.season2Rule2ActionValue = rules.group2_adaysv_item2;                        
+                    }
+        }
+
+        if (res.result && res.result.length > 0) {
+            row.total = res.result[0].total;
+            row.cleaning = res.result[0].clean;
+            row.guestFee = res.result[0].gs;
+        }
+
+        return row;
     }
 
     constructor(public http: Http) {

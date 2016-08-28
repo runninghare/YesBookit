@@ -1,4 +1,4 @@
-import  {Component, Input, Directive} from '@angular/core';
+import  {Component, Input, Directive, OnInit} from '@angular/core';
 
 import {DateData} from '../pojo/date-data';
 import {GuestData} from '../pojo/guest-data';
@@ -6,112 +6,70 @@ import {RatePostData} from '../pojo/post-data';
 import {TestDataGeneratorService} from '../services/test-data-generator.service';
 import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
 
-import {TestPlanItem} from '../pojo/test-plan';
+import {TestPlanService} from '../services/test-plan.service';
+import {TestPlanItem, TestDataRow} from '../pojo/test-plan';
 import {TestVectors} from '../services/test-vector.service';
 import {RateCalcService} from '../services/rate-calc.service';
+import {Observable, Subject, BehaviorSubject, Subscription} from 'rxjs/Rx';
 
 import {TestUnit} from '../components/test-unit';
+import {UiTableConfig, UiTable, UITableAction, UiTableOptions} from '../components/ui-table';
 
 @Component({
     selector: "suite",
     template: `
-    <h1>{{testPlan.title}}</h1>
+      <div class="ui grid" style="margin-bottom: 10px">
+          <div class="six wide column">
+              <div class="ui header">
+                {{testItem.title}}
+              </div>
+              <div>{{testItem.description}}</div>
+          </div>
+          <div class="four wide column right floated">
+              <button (click)="runTests()" class="ui primary button">Run Tests</button>
+              <button (click)="stopTests()" class="ui button">Pause Tests</button>
+          </div>
+      </div>
+      <ui-table [tableConfig]="testItem.testResultConfig" [dataSource]="testData"></ui-table>
     <!--
     <test-unit [guestData]="guestData" [dateData]="dateData" [itemId]="i"></test-unit>
     -->
     `,
-    directives: [TestUnit]
+    directives: [TestUnit, UiTable],
+    providers: [TestPlanService]
 })
 export class Suites {
 
-    @Input('testPlan') testPlan: TestPlanItem;
+    @Input('name') name: string;
 
     testRepeat: number[] = Array.apply(null, Array(2)).map((d,i) => i);
 
-    guestData: GuestData = {
-        adults: 3,
-        children: 1
+    testItem: TestPlanItem;
+
+    testData: Subject<TestDataRow[]>;
+
+    subscription: Subscription;
+
+    ngOnInit(): void {
+        this.testItem = this.testPlanService.getTestPlanItems().filter((item: TestPlanItem) => item.name == this.name)[0];
+        this.testData = new BehaviorSubject<TestDataRow[]>([]);
+        // this.testData = this.testPlanService.createTestResult(1);
     }
 
-    dateData: DateData = {
-        booking_arrival: "Aug 20",
-        booking_departure: "Sep 6",
-        season1_start: "Aug 20",
-        season1_end: "Aug 28",
-        season2_start: "Sep 5",
-        season2_end: "Sep 16",
-        season_exists: "2 seasons"
-    };
-
-    runTest(suiteNo: number): void {
-        let baseData = TestDataGeneratorService.generateBaseTestingData(suiteNo);
-        let testData: RatePostData[];
-        testData = [
-            this.testDataGeneratorService.generateTestingData(TestDataGeneratorService.generateBaseTestingData(suiteNo), {
-                tariff: {
-                    base_nightly: 130
-                }
-            }),
-            this.testDataGeneratorService.generateTestingData(TestDataGeneratorService.generateBaseTestingData(suiteNo), {
-                tariff: {
-                    base_nightly: 120
-                }
-            })
-        ];
-        let testStream = this.testDataGeneratorService.createTestSquence(testData);
-        testStream.subscribe((a: YBIExistingTariffResponse) => {
-            console.log(a.result[0].total);
+    runTests(): void {
+        // this.testData = this.testPlanService.createTestResult(1);
+        this.subscription = this.testItem.testResultData$.subscribe((result: TestDataRow[]) => {
+            this.testData.next(result);
         });
-        // console.log(testData);
     }
 
-    constructor(public testDataGeneratorService: TestDataGeneratorService, public rateCalcService: RateCalcService) {
-        // this.runTest(1);
-        // let change = {
-        let change = {
-            user_input: {
-                guests: {
-                    adults: "*ALL*",
-                    children: "*ALL*"
-                },
-                arrival: "*ALL*",
-                departure: "*ALL*"
-            },
-            tariff: {
-                base_nightly: "*ALL*"
-            }
-        };
+    stopTests(): void {
+        this.subscription.unsubscribe();
+    }
 
-        let postArray: RatePostData[] = this.testDataGeneratorService.generateAllTestingDataWithSpec(TestDataGeneratorService.generateBaseTestingData(1),
-            change,
-            {
-                user_input: {
-                    guests: {
-                        adults: [1],
-                        children: [1]
-                    },
-                    arrival: [
-                        [2017, 8, 15],
-                        [2017, 8, 16],
-                        [2017, 8, 20]
-                    ],
-                    departure: [
-                        [2017, 9, 15],
-                        [2017, 9, 16],
-                        [2017, 9, 20]
-                    ]
-                },
-                tariff: {
-                    base_nightly: [100, 101, 102, 105, 200, 300,400,500]
-                }
-            }
-        );
-
-        this.testDataGeneratorService.createTestSquence(postArray).subscribe((res: YBIExistingTariffResponse) => {
-            console.log(res.result[0].total);
-            this.rateCalcService.currentYBIResponse.next(res);
-        });
-
-        console.log(postArray);
+    constructor(
+        public testDataGeneratorService: TestDataGeneratorService, 
+        public rateCalcService: RateCalcService,
+        public testPlanService: TestPlanService) {
     }
 }

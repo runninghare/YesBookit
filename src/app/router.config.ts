@@ -2,7 +2,6 @@ import {UIRouter} from "ui-router-ng2";
 import {Injectable, Injector} from "@angular/core";
 import {INITIAL_STATES} from "./app.states";
 import {Ng2StateDeclaration} from "ui-router-ng2/ng2/interface";
-import {TestPlanItem} from './pojo/test-plan';
 
 /**
  * Create your own UIRouterConfig class
@@ -21,8 +20,8 @@ export class MyUIRouterConfig {
     INITIAL_STATES.forEach(state => uiRouter.stateRegistry.register(state));
 
     // Define a default behavior, for when the URL matched no routes
-    // uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.suites", {testPlan: new TestPlanItem("Suite 1", "Property Tariff tests without seasonal settings", 5)}, null) && null);
+    uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.suites", {name: "suite1"}, null) && null);
     // uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.arbitrary", null, null) && null);
-    uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.spike", null, null) && null);
+    // uiRouter.urlRouterProvider.otherwise(() => uiRouter.stateService.go("app.spike", null, null) && null);
   }
 }

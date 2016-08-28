@@ -11,6 +11,7 @@ export interface UiTableConfig {
     content?: string;
     sort?: boolean;
     class?: string;
+    type?: string;
 }
 
 export class UITableAction {
@@ -38,7 +39,9 @@ interface OrderType {
   <thead>
     <tr class="ui content form">
       <th *ngFor="let c of tableConfig" class="field">
-      		<a href="" (click)="toggleOrder(c.name)">{{c.title}}</a>
+      		<div style="height: 50px">
+      			<a href="" (click)="toggleOrder(c.name)">{{c.title}}</a>
+      		</div>
 		<div class="ui labeled input">
 			<input [name]="c.name" [(ngModel)]="filter[c.name]" (ngModelChange)="filterUpdate($event)" style="width: 50px" placeholder="Search" type="text">
 		</div>
@@ -50,7 +53,7 @@ interface OrderType {
           	[class]="tableActions.applyRowClasses(row)" 
           	(click)="tableActions.clickRow(row)"
           >
-        <td *ngFor="let k of getKeys(row); let i = index">
+        <td *ngFor="let k of getKeys(); let i = index">
         <div [innerHtml]="tableConfig[i].content || row[k]"></div>
         </td>
     </tr>
@@ -86,10 +89,10 @@ interface OrderType {
 export class UiTable implements OnInit {
 
     tableConfig: UiTableConfig[];
-    tableActions: any;
+    tableActions: UITableAction = new UITableAction();
     tableOptions: UiTableOptions = {
     	itemsPerPage: 10
-    }
+    };
 
     tableData: Object[];
     dataSource: Observable<Object[]>;
@@ -159,7 +162,7 @@ export class UiTable implements OnInit {
 		let indexBegin = this.indexBegin = (x-1) * itemPerPage;
 		let indexEnd = this.indexEnd = Math.min(itemPerPage + indexBegin, y.length);
 
-		console.log(`x = ${x}, indexBegin = ${indexBegin}, length = ${length}`);
+		// console.log(`x = ${x}, indexBegin = ${indexBegin}, length = ${length}`);
 
 		return y.slice(indexBegin, indexEnd);
 	});
@@ -169,7 +172,7 @@ export class UiTable implements OnInit {
 	this.filteredData$.subscribe((elem: Object[]) => {
 		this.itemsTotal = elem.length;
 		this.pageTotal = Math.ceil(elem.length / ((this.tableOptions && this.tableOptions.itemsPerPage) || 10));
-		console.log(`Total Page = ${this.pageTotal}`);
+		// console.log(`Total Page = ${this.pageTotal}`);
 	});
 
 	// --- test ---
@@ -186,8 +189,8 @@ export class UiTable implements OnInit {
 
     }
 
-    getKeys(obj: Object): any[] {
-        return Object.keys(obj);
+    getKeys(): string[] {
+    	return this.tableConfig.map((c: UiTableConfig) => c.name);
     }
 
     constructor() {

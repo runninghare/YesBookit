@@ -20,13 +20,13 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
     name: 'app.suites',
     component: Suites,
     params: { 
-      testPlan: null 
+      name: null 
     },
     resolve: [
       // Inject the bazList (from the parent) and find the correct
       {
-        token: 'testPlan', deps: [Transition], resolveFn: (trans) => {
-          return trans.params().testPlan;
+        token: 'name', deps: [Transition], resolveFn: (trans) => {
+          return trans.params().name;
         }
       }
     ]

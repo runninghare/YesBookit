@@ -5,6 +5,7 @@ import {FORM_DIRECTIVES} from '@angular/common';
 import {DateBarComponent} from './date-bar';
 import {DateData} from './pojo/date-data';
 import {TestPlanItem} from './pojo/test-plan';
+import {TestPlanService} from './services/test-plan.service';
 
 declare var $: JQueryStatic;
 
@@ -41,7 +42,7 @@ declare var $: JQueryStatic;
 </div>
 
     `,
-    providers: [TestPlanItem]
+    providers: [TestPlanService]
 })
 export class AppComponent implements AfterViewInit{
 
@@ -57,13 +58,8 @@ export class AppComponent implements AfterViewInit{
         return false;
     }
 
-    constructor() {
-        this.testPlan = [
-            new TestPlanItem("Suite 1", "Property Tariff tests without seasonal settings", 5),
-            new TestPlanItem("Suite 2", "Property Tariff + Single Season w/o rules & w/o crossover", 4),
-            new TestPlanItem("Suite 3", "Property Tariff + Single Season with rules but w/o crossover ", 84),
-            new TestPlanItem("Suite 4", "Crossover Tests", 168)
-        ];
+    constructor(public testPlanService: TestPlanService) {
+        this.testPlan = testPlanService.getTestPlanItems();
     }
 
 }
