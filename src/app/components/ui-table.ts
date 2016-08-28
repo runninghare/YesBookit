@@ -53,7 +53,7 @@ interface OrderType {
           	[class]="tableActions.applyRowClasses(row)" 
           	(click)="tableActions.clickRow(row)"
           >
-        <td *ngFor="let k of getKeys(); let i = index">
+        <td *ngFor="let k of getKeys(); let i = index" style="text-align: right">
         <div [innerHtml]="tableConfig[i].content || row[k]"></div>
         </td>
     </tr>

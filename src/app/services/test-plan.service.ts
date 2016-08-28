@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, bind} from '@angular/core';
 import {RatePostData} from '../pojo/post-data';
 import {UiTableConfig, UiTable, UITableAction, UiTableOptions} from '../components/ui-table';
 import {TestPlanItem, TestDataRow} from '../pojo/test-plan';
 import {TestDataGeneratorService} from '../services/test-data-generator.service';
 import {Observable, Subject, BehaviorSubject} from 'rxjs/Rx';
+import {YBIExistingTariffResponseResult, YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
 
 @Injectable()
 export class TestPlanService {
@@ -61,7 +62,8 @@ export class TestPlanService {
 				"guest_surcharge": 8,
 				"test_scheme_override": {
 					"groups": []
-				}
+				},
+				"test_seasons_override": []
 			},
 			rules: {
 				"group1_adaysc_item1": "P",
@@ -98,44 +100,64 @@ export class TestPlanService {
 
 		this.testPlan[0].testResultConfig = [
 			{
+				name: "id",
+				title: "ID",
+				type: "number"
+			},
+			{
 				name: "basePrice",
 				title: "Base Price ($)",
+				type: "number"
 			},
 			{
 				name: "los",
-				title: "Length Of Stay"
+				title: "Length Of Stay",
+				type: "number"
 			},
 			{
 				name: "adults",
-				title: "Adults"
+				title: "Adults",
+				type: "number"
 			},
 			{
 				name: "children",
-				title: "Children"
+				title: "Children",
+				type: "number"
 			},
 			{
 				name: "adultsAbove",
-				title: "Adult.Sur.Above"
+				title: "Adult.Sur.Above",
+				type: "number"
 			},
 			{
 				name: "adultsSurchargeAbove",
-				title: "Adult Surchage/p ($)"
+				title: "Adult Surchage/p ($)",
+				type: "number"
 			},
 			{
 				name: "childrenAbove",
-				title: "Children.Sur.Above"
+				title: "Children.Sur.Above",
+				type: "number"
 			},
 			{
 				name: "childrenSurchargeAbove",
-				title: "Children. Surchage/p ($)"
+				title: "Children. Surchage/p ($)",
+				type: "number"
 			},			
 			{
 				name: "total",
-				title: "Total ($)"
+				title: "Total ($)",
+				type: "number"
 			},
 			{
 				name: "guestFee",
-				title: "Guest Fee ($)"
+				title: "Guest Fee ($)",
+				type: "number"
+			},
+			{
+				name: "testResult",
+				title: "Test Result",
+				type: "string"
 			}
 		];
 
@@ -157,17 +179,18 @@ export class TestPlanService {
 					]
 				},
 				tariff: {
-					base_nightly: [100, 101, 102, 105, 200, 300, 400, 500]
+					base_nightly: [100]
 				}
 			}
 		);
 
-		this.testPlan[0].testResultData$ = this.testDataGeneratorService.createTestSquence(this.testPlan[0].testVector)
-			.map(this.testDataGeneratorService.ybiResponseToTableRow)
-			.scan((rows: TestDataRow[], row: TestDataRow): TestDataRow[] => {
-				rows.push(row);
-				return rows;
-			}, []);
+		this.testPlan.forEach((testItem: TestPlanItem) => {
+			testItem.currentResultData$ = new BehaviorSubject<TestDataRow[]>([]);
+			testItem.numOfTests = testItem.testVector ? testItem.testVector.length : 0;
+			testItem.numOfFailures = 0;
+			testItem.numOfSuccesses = 0;
+		});
+
 	}
 
 	getTestPlanItems(): TestPlanItem[] {
@@ -176,8 +199,10 @@ export class TestPlanService {
 
 	// suite number must be 1 - 4
 	createTestResult(suite: number): Observable<TestDataRow[]> {
-		return this.testDataGeneratorService.createTestSquence(this.testPlan[suite-1].testVector)
-				.map(this.testDataGeneratorService.ybiResponseToTableRow)
+		
+		this.testPlan[suite-1].ybiExistingResponse$ = this.testDataGeneratorService.createTestSquence(this.testPlan[suite-1].testVector);
+
+		return this.testPlan[suite-1].ybiExistingResponse$.map(this.testDataGeneratorService.ybiResponseToTableRow)
 				.scan((rows: TestDataRow[], row: TestDataRow): TestDataRow[] => {
 					rows.push(row);
 					return rows;
@@ -185,8 +210,13 @@ export class TestPlanService {
 	}
 
 	constructor(public testDataGeneratorService: TestDataGeneratorService) {
+		console.log("--- construct test-plan service ---");
 		this.injectTestingData();
 	}
 
 }
+
+export var tablePlanServiceInjectable: Array<any> = [
+  bind(TestPlanService).toClass(TestPlanService)
+];
 

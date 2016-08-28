@@ -19,7 +19,10 @@ declare var $: JQueryStatic;
 		Run unit tests manually or randomly
 	</a>
 	<a class="teal item" uiSref="app.suites" [uiParams]="{ name: testItem.name} " uiSrefActive="active" *ngFor="let testItem of testPlan; let i = index">
-		<h3>{{testItem.title}} <div class="ui teal left pointing label" style="float: right">{{testItem.numOfTests}}</div>
+		<h3>
+			{{testItem.title}} <div class="ui teal left pointing label" style="float: right">{{testItem.numOfSuccesses}}</div>
+			<div class="ui red left pointing label" style="float: right">{{testItem.numOfFailures}}</div>
+			<div class="ui blue left pointing label" style="float: right">{{testItem.numOfTests}}</div>
 		</h3>
 		{{testItem.description}}
 	</a>

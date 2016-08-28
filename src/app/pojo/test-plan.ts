@@ -1,7 +1,9 @@
 
 import {RatePostData} from '../pojo/post-data';
 import {UiTableConfig, UiTable, UITableAction, UiTableOptions} from '../components/ui-table';
-import {Observable} from "rxjs/Rx";
+import {YBIExistingTariffResponseResult, YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
+
+import {Observable, Subject} from "rxjs/Rx";
 
 export interface TestDataRow {
 
@@ -66,6 +68,8 @@ export interface TestDataRow {
 	rent?: number;
 	cleaning?: number;
 	guestFee?: number;
+	testResult?: string;
+	id?: number;
 }
 
 export interface TestPlanItem {
@@ -78,11 +82,20 @@ export interface TestPlanItem {
 
 	numOfTests?: number;
 
+	numOfSuccesses?: number;
+
+	numOfFailures?: number;
+
 	testVector?: RatePostData[];
 
 	testResultConfig?:  UiTableConfig[];
 
+	ybiExistingResponse$?: Observable<YBIExistingTariffResponse>,
+
 	testResultData$?: Observable<TestDataRow[]>;
+
+	currentResultData$?: Subject<TestDataRow[]>;
+
 }
 
 

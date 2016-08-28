@@ -1,7 +1,9 @@
-import  {Component, Input, Directive} from '@angular/core';
+import  {Component, Input, Directive, OnInit} from '@angular/core';
 
 import {RatePostData} from '../pojo/post-data';
 import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
+import {TestPlanItem, TestDataRow} from '../pojo/test-plan';
+import {TestPlanService} from '../services/test-plan.service';
 
 import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
@@ -47,7 +49,7 @@ import {RateCalcService} from '../services/rate-calc.service';
     `,
     directives: [TestUnit]
 })
-export class ArbitraryTest {
+export class ArbitraryTest implements OnInit {
 
     testRepeat: number[] = Array.apply(null, Array(1)).map((d, i) => i);
 
@@ -59,14 +61,12 @@ export class ArbitraryTest {
     existingBooking: number;
     calcMessage: string;
 
-    postData: RatePostData;
-
-    constructor(public rateCalcService: RateCalcService, public http: Http) {
-        rateCalcService.setCurrentPostData(RateCalcService.generateDummyPostData());
-        rateCalcService.currentPostData.flatMap((postData: RatePostData) =>
-            http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
+    ngOnInit(): void {
+        this.rateCalcService.setCurrentPostData(RateCalcService.generateDummyPostData());
+        this.rateCalcService.currentPostData.flatMap((postData: RatePostData) =>
+            this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
         .subscribe((result: YBIExistingTariffResponse) => {
-            rateCalcService.currentYBIResponse.next(result);
+            this.rateCalcService.currentYBIResponse.next(result);
         });
 
         this.rateCalcService.currentYBIResponse.subscribe((res: YBIExistingTariffResponse) => {
@@ -81,5 +81,8 @@ export class ArbitraryTest {
                 // console.log(res.result[0]);
             }
         });
+    }
+
+    constructor(public rateCalcService: RateCalcService, public http: Http) {
     }
 }
