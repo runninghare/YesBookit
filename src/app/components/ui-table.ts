@@ -148,7 +148,7 @@ export class UiTable implements OnInit {
 
 	this.filteredData$ = this.filter$.combineLatest(this.dataSource, (x: Object, y: Object[]) => {
 		if (!x || typeof x != "object") return y;
-		return Object.keys(x).reduce((result, key) => result.filter((val) => !x[key] || val[key].toLowerCase().indexOf(x[key].toLowerCase()) > -1), y);
+		return Object.keys(x).reduce((result, key) => result.filter((val) => !x[key] || val[key].toString().toLowerCase().indexOf(x[key].toString().toLowerCase()) > -1), y);
 	});
 
 	this.orderedData$ = this.orderBy$.combineLatest(this.filteredData$, (x: Object[], y: Object[]) => {
