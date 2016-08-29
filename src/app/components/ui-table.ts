@@ -21,6 +21,10 @@ export class UITableAction {
 
 	clickRow(row: any): void {
 	}
+
+	convertRowData(row: any): any {
+		return row;
+	}
 }
 
 export interface UiTableOptions {
@@ -54,7 +58,7 @@ interface OrderType {
           	(click)="tableActions.clickRow(row)"
           >
         <td *ngFor="let k of getKeys(); let i = index" style="text-align: right">
-        <div [innerHtml]="tableConfig[i].content || row[k]"></div>
+        <div>{{tableActions.convertRowData(row)[k]}}</div>
         </td>
     </tr>
   </tbody>
@@ -153,7 +157,13 @@ export class UiTable implements OnInit {
 
 	this.orderedData$ = this.orderBy$.combineLatest(this.filteredData$, (x: Object[], y: Object[]) => {
 		if (!x || x.length == 0) return y;
-		return y.sort((a, b) => <number>x.reduce((result, elem:any)=>result || ((a[elem.name]<b[elem.name])?elem.order:(a[elem.name]>b[elem.name])?-(elem.order):0), 0));
+		return y.sort((a, b) => <number>x.reduce((result, elem:any)=>{
+			let valA = a[elem.name];
+			let valB = b[elem.name];
+			if (!isNaN(valA)) valA = parseFloat(valA);
+			if (!isNaN(valB)) valB = parseFloat(valB);
+			return result || ((valA<valB)?elem.order:(valA>valB)?-(elem.order):0)
+		}, 0));
 		// return <Object[]>(x.reduce((pre: any[], elem) => pre.sort((a,b) => (a[elem.name] < b[elem.name])?elem.order:(a[elem.name] > b[elem.name])?-(elem.order):0), y));
 	});
 

@@ -80,14 +80,14 @@ export class Suites {
 
         class Action extends UITableAction {
             applyRowClasses(row: TestDataRow): string {
-                if (row.total < 4000) {
-                    return "positive";
-                }  else {
-                    return "negative";
-                }
+                return TestDataGeneratorService.ybiTestResultEvaluation(row, () => "positive", () => "negative");
             }
             
             clickRow(row: any): void {
+            }
+
+            convertRowData(row: TestDataRow): TestDataRow {
+                return  TestDataGeneratorService.ybiRowDataConverter(row);
             }
         }
 
@@ -98,24 +98,29 @@ export class Suites {
         this.testItem.numOfSuccesses = 0;
         this.testItem.numOfFailures = 0;
         this.testItem.currentResultData$.next([]);
-        this.testItem.testResultData$ = this.testPlanService.createTestResult(1);
+        this.testItem.testResultData$ = this.testPlanService.createTestResult(this.testItem);
         this.testResultSubscription = this.testItem.testResultData$.subscribe(r => {
             this.testItem.numOfSuccesses = 0;
             this.testItem.numOfFailures = 0;
             let id = 0;
             r.forEach((row) => {
                 row.id = ++id;
-                if (row.total < 4000) {
+                TestDataGeneratorService.ybiTestResultEvaluation(row, () => {
                     this.testItem.numOfSuccesses++;
                     row.testResult = "SUCCESS";
-                } else {
+                    return 0;
+                }, () => {
                     this.testItem.numOfFailures++;
                     row.testResult = "FAILURE";
-                }
+                    return 1;
+                })
             })
             this.testItem.currentResultData$.next(r)
         });
-        this.ybiTariffResponseSubscription = this.testItem.ybiExistingResponse$.subscribe(r => this.rateCalcService.currentYBIResponse.next(r));
+        this.ybiTariffResponseSubscription = this.testItem.ybiExistingResponse$.subscribe(r => {
+            this.rateCalcService.currentPostData = r.post_data;
+            this.rateCalcService.currentYBIResponse$.next(r);
+        });
     }
 
     stopTests(): void {

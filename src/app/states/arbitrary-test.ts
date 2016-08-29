@@ -62,14 +62,16 @@ export class ArbitraryTest implements OnInit {
     calcMessage: string;
 
     ngOnInit(): void {
-        this.rateCalcService.setCurrentPostData(RateCalcService.generateDummyPostData());
-        this.rateCalcService.currentPostData.flatMap((postData: RatePostData) =>
+
+        this.rateCalcService.setCurrentPostData(this.rateCalcService.currentPostData);
+
+        this.rateCalcService.currentPostData$.flatMap((postData: RatePostData) =>
             this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
         .subscribe((result: YBIExistingTariffResponse) => {
-            this.rateCalcService.currentYBIResponse.next(result);
+            this.rateCalcService.currentYBIResponse$.next(result);
         });
 
-        this.rateCalcService.currentYBIResponse.subscribe((res: YBIExistingTariffResponse) => {
+        this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
             if (res && res.result && res.result.length > 0) {
                 this.existingTotal = res.result[0].total;
                 this.existingRent = res.result[0].xgs;

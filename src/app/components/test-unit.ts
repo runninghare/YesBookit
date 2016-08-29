@@ -20,7 +20,7 @@ declare var $: JQueryStatic;
   selector: "test-unit",
   templateUrl: "views/test-unit.html",
   directives: [FORM_DIRECTIVES, DateBarComponent, BlurForwarder],
-  inputs: ['postData', 'itemId'],
+  inputs: ['itemId'],
   host: { '(input-blur)': 'onInputBlur($event)' },
 })
 export class TestUnit implements AfterViewInit, OnInit {
@@ -278,13 +278,15 @@ export class TestUnit implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.rateCalcService.currentPostData.subscribe((postData: RatePostData) => {
-      this.postData = postData;
-      this.updateDtWithPostData(postData);
+    this.rateCalcService.currentPostData$.subscribe((postData: RatePostData) => {
+      if (postData) {
+        this.postData = postData;
+        this.updateDtWithPostData(postData);
+      }
       // this.dateData.season1_start = this.postData.tariff.test_seasons_override
     });
 
-    this.rateCalcService.currentYBIResponse.subscribe((res: YBIExistingTariffResponse) => {
+    this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
       if (res && res.post_data) {
         this.postData = res.post_data;
         this.updateDtWithPostData(res.post_data);

@@ -192,6 +192,59 @@ export class TestDataGeneratorService {
         });
     }
 
+    public static ybiRowDataConverter(row: TestDataRow): TestDataRow { 
+        let symbol2text = {
+            price_factor: {
+                V: "Price",
+                F: "Factor"
+            },
+            seasonProRata: {
+                PW: "Optional Weekly÷7",
+                PN: "Use Nightly Rate"
+            },
+            conditionTypes: {
+                L: "Less than",
+                M: "More than",
+                E: "Equal to",
+                B: "Block",
+                b: "Block Per Rata",
+                E5: "5 Day Stay",
+                D: "DoW"
+            },
+            actionTypes: {
+                A: "Add Sum",
+                F: "Apply Factor",
+                P: "Force Price"
+            }
+        };
+
+        let map = {
+            season1PriceType: symbol2text.price_factor,
+            season2PriceType: symbol2text.price_factor,
+            season1ProRataUse: symbol2text.seasonProRata,
+            season2ProRataUse: symbol2text.seasonProRata,
+            season1Rule1ConditionName: symbol2text.conditionTypes,
+            season1Rule1ActionName: symbol2text.actionTypes
+        };
+
+        Object.keys(map).forEach(k => {
+            let t = map[k];
+            if (row[k] && t[row[k]]) {
+                row[k] = t[row[k]];
+            }
+        });
+
+        return row;
+    }
+
+    public static ybiTestResultEvaluation(row: TestDataRow, success: () => {}, failure: () => {}): any {
+        if (row.total < 100000) {
+            return success();
+        } else {
+            return failure();
+        }
+    }
+
     ybiResponseToTableRow(res: YBIExistingTariffResponse): TestDataRow {
         let row: TestDataRow = {};
 

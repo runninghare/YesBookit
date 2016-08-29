@@ -1,5 +1,5 @@
 
-import {Injectable} from '@angular/core';
+import {Injectable, bind} from '@angular/core';
 
 @Injectable()
 export class TestVectors {
@@ -100,6 +100,9 @@ export class TestVectors {
     };
 
     constructor() {
-
     }
 }
+
+export var testVectorServiceInjectable: Array<any> = [
+    bind(TestVectors).toClass(TestVectors)
+];
