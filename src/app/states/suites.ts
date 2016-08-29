@@ -15,6 +15,8 @@ import {Observable, Subject, BehaviorSubject, Subscription, ReplaySubject} from 
 import {TestUnit} from '../components/test-unit';
 import {UiTableConfig, UiTable, UITableAction, UiTableOptions} from '../components/ui-table';
 
+import {UIRouter} from "ui-router-ng2";
+
 @Component({
     selector: "suite",
     template: `
@@ -65,11 +67,11 @@ export class Suites {
 
     testData: Subject<TestDataRow[]>;
 
-    testResultSubscription: Subscription;
-
-    ybiTariffResponseSubscription: Subscription;
-
     tableActions: UITableAction;
+
+    ngOnDestroy(): void {
+        // this.stopTests();
+    }
 
     ngOnInit(): void {
         this.testItem = this.testPlanService.getTestPlanItems().filter((item: TestPlanItem) => item.name == this.name)[0];
@@ -78,12 +80,23 @@ export class Suites {
             this.testItem.currentResultData$ = new BehaviorSubject<TestDataRow[]>([]);
         }
 
+        let current_suite = this.name;
+
         class Action extends UITableAction {
             applyRowClasses(row: TestDataRow): string {
-                return TestDataGeneratorService.ybiTestResultEvaluation(row, () => "positive", () => "negative");
+                return TestDataGeneratorService.ybiTestResultEvaluation(row, () => "positive testrow", () => "negative testrow");
             }
             
             clickRow(row: any): void {
+                let res = TestDataGeneratorService.ybiTableRowToResponse(row);
+
+                // console.log("=== row ===");
+                // console.log(row);
+                // console.log(JSON.stringify(res));
+
+                Suites.rateCalcService.currentPostData = res.post_data;
+                Suites.rateCalcService.currentYBIResponse$.next(res);
+                Suites.uiRouter.stateService.go("app.arbitrary", {fromStateParams: {name: current_suite}, fromState: "app.suites"}, null) ;
             }
 
             convertRowData(row: TestDataRow): TestDataRow {
@@ -94,12 +107,18 @@ export class Suites {
         this.tableActions = new Action();
     }
 
+    static rateCalcService: RateCalcService;
+
     runTests(): void {
         this.testItem.numOfSuccesses = 0;
         this.testItem.numOfFailures = 0;
         this.testItem.currentResultData$.next([]);
+
+        this.stopTests();
+
         this.testItem.testResultData$ = this.testPlanService.createTestResult(this.testItem);
-        this.testResultSubscription = this.testItem.testResultData$.subscribe(r => {
+
+        this.testItem.testResultSubscription = this.testItem.testResultData$.subscribe(r => {
             this.testItem.numOfSuccesses = 0;
             this.testItem.numOfFailures = 0;
             let id = 0;
@@ -117,20 +136,26 @@ export class Suites {
             })
             this.testItem.currentResultData$.next(r)
         });
-        this.ybiTariffResponseSubscription = this.testItem.ybiExistingResponse$.subscribe(r => {
-            this.rateCalcService.currentPostData = r.post_data;
-            this.rateCalcService.currentYBIResponse$.next(r);
+
+        this.testItem.ybiTariffResponseSubscription = this.testItem.ybiExistingResponse$.subscribe(r => {
+            Suites.rateCalcService.currentPostData = r.post_data;
+            Suites.rateCalcService.currentYBIResponse$.next(r);
         });
     }
 
     stopTests(): void {
-        this.testResultSubscription && this.testResultSubscription.unsubscribe();
-        this.ybiTariffResponseSubscription && this.ybiTariffResponseSubscription.unsubscribe();
+        this.testItem.testResultSubscription && this.testItem.testResultSubscription.unsubscribe();
+        this.testItem.ybiTariffResponseSubscription && this.testItem.ybiTariffResponseSubscription.unsubscribe();
     }
 
+    static uiRouter: UIRouter;
+
     constructor(
+        public uiRouter: UIRouter,
         public testDataGeneratorService: TestDataGeneratorService, 
-        public rateCalcService: RateCalcService,
+        rateCalcService: RateCalcService,
         public testPlanService: TestPlanService) {
+        Suites.uiRouter = uiRouter;
+        Suites.rateCalcService = rateCalcService;
     }
 }

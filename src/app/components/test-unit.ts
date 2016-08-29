@@ -12,7 +12,7 @@ import {DateDataService} from '../services/dateData.service';
 import {RateCalcService} from '../services/rate-calc.service';
 
 import {BlurForwarder} from '../directives/common';
-import {Observable, Subject, BehaviorSubject} from 'rxjs/Rx';
+import {Observable, Subject, BehaviorSubject, Subscription} from 'rxjs/Rx';
 
 declare var $: JQueryStatic;
 
@@ -30,10 +30,13 @@ export class TestUnit implements AfterViewInit, OnInit {
 
   dateSliderUpdated(dt: DateData): void {
     this.updatePostWithDateData(dt);
+
+    console.log("=== update postData due to dateSliderUpdated ===")
     this.rateCalcService.setCurrentPostData(this.postData);
   }
 
   seasonRateUpdate(val: any): void {
+    console.log("=== update postData due to seasonRateUpdate ===");
     this.rateCalcService.setCurrentPostData(this.postData);
   }
 
@@ -146,6 +149,7 @@ export class TestUnit implements AfterViewInit, OnInit {
       existing_pairs_2[0] = existing_pairs_2[0] || this.tempPair[1];
     }
 
+    // console.log("=== update post data due to season mode change ===");
     this.rateCalcService.setCurrentPostData(this.postData);
   }
 
@@ -277,8 +281,11 @@ export class TestUnit implements AfterViewInit, OnInit {
       this.dateDataService.setCurrentDateData(this.dateData);
   }
 
+  subscriptionCurrentPostData: Subscription;
+  subscriptionCurrentYBIResponse: Subscription;
+
   ngOnInit() {
-    this.rateCalcService.currentPostData$.subscribe((postData: RatePostData) => {
+    this.subscriptionCurrentPostData = this.rateCalcService.currentPostData$.subscribe((postData: RatePostData) => {
       if (postData) {
         this.postData = postData;
         this.updateDtWithPostData(postData);
@@ -286,12 +293,17 @@ export class TestUnit implements AfterViewInit, OnInit {
       // this.dateData.season1_start = this.postData.tariff.test_seasons_override
     });
 
-    this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
+    this.subscriptionCurrentYBIResponse = this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
       if (res && res.post_data) {
         this.postData = res.post_data;
         this.updateDtWithPostData(res.post_data);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionCurrentYBIResponse.unsubscribe();
+    this.subscriptionCurrentPostData.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -303,8 +315,14 @@ export class TestUnit implements AfterViewInit, OnInit {
   }
 
   constructor(public dateDataService: DateDataService, public rateCalcService: RateCalcService) {
-    this.debouncedTestUnitInputChange.subscribe(() => {
-      this.rateCalcService.setCurrentPostData(this.postData);
+    this.debouncedTestUnitInputChange.subscribe((dt) => {
+
+      // console.log("=== update post data due to debounced UI input change ===");
+      // console.log(dt);
+
+      if (dt) {
+        this.rateCalcService.setCurrentPostData(this.postData);
+      }
     });
     //this.dateDataService.setCurrentDateData(this.dateData);
     // setTimeout(() => {

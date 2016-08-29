@@ -4,7 +4,8 @@ import {TariffData} from './tariff-data';
 import {RulesData} from './rules-data';
 
 export interface RatePostData {
-    user_input?: UserInputData|UserInputData[];
-    tariff?: TariffData;
-    rules?: RulesData;
+	clean_tariff_files?: number;
+	user_input?: UserInputData|UserInputData[];
+	tariff?: TariffData;
+	rules?: RulesData;
 }

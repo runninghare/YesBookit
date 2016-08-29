@@ -8,7 +8,7 @@ import {GuestData} from '../pojo/guest-data';
 import {TariffData} from '../pojo/tariff-data';
 import {RulesData} from '../pojo/rules-data';
 import {RatePostData} from '../pojo/post-data';
-import {YBIExistingTariffResponse} from '../pojo/ybi-tariff-response';
+import {YBIExistingTariffResponse, YBIExistingTariffResponseResult} from '../pojo/ybi-tariff-response';
 import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 import {RateCalcService} from './rate-calc.service';
 import {TestVectors} from './test-vector.service';
@@ -19,58 +19,53 @@ declare var $: JQueryStatic;
 @Injectable()
 export class TestDataGeneratorService {
 
-    public static generateBaseTestingData(suiteNumber: number): RatePostData {
-        switch (suiteNumber) {
-            case 1:
-                return {
-                    user_input: {
-                        guests: {
-                            adults: 1,
-                            children: 0
-                        },
-                        arrival: [2017, 8, 18],
-                        departure: [2017, 9, 10]
-                    },
-                    tariff: {
-                        "child_above": 0,
-                        "guest_above": 0,
-                        "base_nightly": 0,
-                        "guest_max": 10,
-                        "guest_min": 1,
-                        "child_surcharge": 0,
-                        "cpd": 0,
-                        "booking_fee": 0,
-                        "exec": 0,
-                        "bond": 0,
-                        "cpb": 0,
-                        "cds": 0,
-                        "guest_surcharge": 0,
-                        "test_scheme_override": {
-                            "groups": []
-                        },
-                        "test_seasons_override": {
-                        }
-                    },
-                                rules: {
-                "group1_adaysc_item1": "P",
-                "group1_adaysid_item1": "RULE 1",
-                "group1_adaysm_item1": "M",
-                "group1_adaysn_item1": 20,
-                "group1_adaysv_item1": 201,
-                "group1_adaysc_item2": "P",
-                "group1_adaysid_item2": "RULE 2",
-                "group1_adaysm_item2": "L",
-                "group1_adaysn_item2": 30,
-                "group1_adaysv_item2": 168
+    public static defaultPostData: RatePostData = {
+        user_input: {
+            guests: {
+                adults: 2,
+                children: 2
+            },
+            arrival: [2017, 8, 18],
+            departure: [2017, 9, 10]
+        },
+        tariff: {
+            "child_above": 0,
+            "guest_above": 2,
+            "base_nightly": 125,
+            "guest_max": 10,
+            "guest_min": 1,
+            "child_surcharge": 7,
+            "cpd": 3,
+            "booking_fee": 800,
+            "exec": 0,
+            "bond": 500,
+            "cpb": 15,
+            "cds": 3,
+            "guest_surcharge": 11,
+            "group1_rate_type": "F",
+            "group1_perrata_type": "PN",
+            "group1_nightly": 5,
+            "group1_optional_weekly": 500.00,
+            "test_scheme_override": {
+                "tax": 1.0,
+                "groups": []
+            },
+            "test_seasons_override": {
+                "1": {
+                    "name": "Blue Season",
+                    "pairs": [
+                    ]
+                },
+                "2": {
+                    "name": "Orange Season",
+                    "pairs": [
+                    ]
+                }
             }
-                };
-            case 2:
-            case 3:
-            case 4:
-            default:
+        },
+        rules: {
         }
-        return null;
-    }
+    };
 
     private deepFindProp(obj: Object, path: string) {
         for (let i = 0, pathArray = path.split('.'), len = pathArray.length; i < len; i++) {
@@ -227,14 +222,16 @@ export class TestDataGeneratorService {
             season1Rule1ActionName: symbol2text.actionTypes
         };
 
+        let new_row = $.extend(true, {}, row);
+
         Object.keys(map).forEach(k => {
             let t = map[k];
             if (row[k] && t[row[k]]) {
-                row[k] = t[row[k]];
+                new_row[k] = t[row[k]];
             }
         });
 
-        return row;
+        return new_row;
     }
 
     public static ybiTestResultEvaluation(row: TestDataRow, success: () => {}, failure: () => {}): any {
@@ -290,6 +287,10 @@ export class TestDataGeneratorService {
                         row.season2OptionalWeekly = tariff.group2_optional_weekly;
                         row.season2ProRataUse = tariff.group2_perrata_type;
 
+                        if (tariff.test_scheme_override && tariff.test_scheme_override.tax) {
+                            row.tax = tariff.test_scheme_override.tax;
+                        }
+
                         if (tariff.test_seasons_override && tariff.test_seasons_override[1]) {
                             if (tariff.test_seasons_override[1].pairs.length > 0) {
                                 row.season1P1Start = tariff.test_seasons_override[1].pairs[0].from;
@@ -341,9 +342,110 @@ export class TestDataGeneratorService {
             row.total = res.result[0].total;
             row.cleaning = res.result[0].clean;
             row.guestFee = res.result[0].gs;
+            row.rent = res.result[0].xgs;
+            row.bondFee = res.result[0].Bfee;
+            row.desc = res.result[0].desc;
         }
 
         return row;
+    }
+
+    public static ybiTableRowToResponse(row: TestDataRow): YBIExistingTariffResponse {
+
+        let postData: RatePostData = TestDataGeneratorService.defaultPostData;
+
+        postData.user_input = {
+                    guests: {
+                        adults: row.adults,
+                        children: row.children
+                    },
+                    arrival: row.arrival.split("/").map(n => parseInt(n)),
+                    departure: row.departure.split("/").map(n => parseInt(n))
+                };
+
+        row.basePrice && (postData.tariff.base_nightly = row.basePrice);
+        row.bookingFee && (postData.tariff.booking_fee = row.bookingFee);
+        row.cleaningDayBlock && (postData.tariff.cds = row.cleaningDayBlock);
+        row.cleaningPricePerBlock && (postData.tariff.cpd = row.cleaningPricePerBlock);
+        row.cleaningBase && (postData.tariff.cpb = row.cleaningBase);
+        row.adultsAbove && (postData.tariff.guest_above = row.adultsAbove);
+        row.childrenAbove && (postData.tariff.child_above = row.childrenAbove);
+        row.adultsSurchargeAbove && (postData.tariff.guest_surcharge = row.adultsSurchargeAbove);
+        row.childrenSurchargeAbove && (postData.tariff.child_surcharge = row.childrenSurchargeAbove);
+        row.tax && (postData.tariff.test_scheme_override.tax = row.tax);
+
+        row.season1PriceType && (postData.tariff.group1_rate_type = row.season1PriceType);
+        row.season2PriceType && (postData.tariff.group2_rate_type = row.season2PriceType);
+        row.season1PriceOrFactor && (postData.tariff.group1_nightly = row.season1PriceOrFactor);
+        row.season2PriceOrFactor && (postData.tariff.group2_nightly = row.season2PriceOrFactor);
+        row.season1OptionalWeekly && (postData.tariff.group1_optional_weekly = row.season1OptionalWeekly);
+        row.season2OptionalWeekly && (postData.tariff.group2_optional_weekly = row.season2OptionalWeekly);
+        row.season1ProRataUse  && (postData.tariff.group1_perrata_type = row.season1ProRataUse);
+        row.season2ProRataUse  && (postData.tariff.group2_perrata_type = row.season2ProRataUse);
+
+        if (row.season1P1Start) {
+            postData.tariff.test_scheme_override.groups = [1];
+            postData.tariff.test_seasons_override[1] = {};
+            postData.tariff.test_seasons_override[1].pairs = [{
+                from: row.season1P1Start,
+                to: row.season1P1End
+            }];
+        }
+
+        if (row.season1P2Start) {
+            postData.tariff.test_seasons_override[1].pairs.push({
+                from: row.season1P2Start,
+                to: row.season1P2End
+            });
+        }
+
+        if (row.season2P1Start) {
+            postData.tariff.test_scheme_override.groups = [1,2];
+            postData.tariff.test_seasons_override[2] = {};
+            postData.tariff.test_seasons_override[2].pairs = [{
+                from: row.season2P1Start,
+                to: row.season2P1End
+            }];
+        }
+
+        postData.rules.group1_adaysid_item1 = row.season1Rule1Name;
+        postData.rules.group1_adaysm_item1 = row.season1Rule1ConditionName;
+        postData.rules.group1_adaysn_item1 = row.season1Rule1ConditionValue;
+        postData.rules.group1_adaysc_item1 = row.season1Rule1ActionName;
+        postData.rules.group1_adaysv_item1 = row.season1Rule1ActionValue;
+
+        postData.rules.group1_adaysid_item2 = row.season1Rule2Name;
+        postData.rules.group1_adaysm_item2 = row.season1Rule2ConditionName;
+        postData.rules.group1_adaysn_item2 = row.season1Rule2ConditionValue;
+        postData.rules.group1_adaysc_item2 = row.season1Rule2ActionName;
+        postData.rules.group1_adaysv_item2 = row.season1Rule2ActionValue;
+
+        postData.rules.group2_adaysid_item1 = row.season2Rule1Name;
+        postData.rules.group2_adaysm_item1 = row.season2Rule1ConditionName;
+        postData.rules.group2_adaysn_item1 = row.season2Rule1ConditionValue;
+        postData.rules.group2_adaysc_item1 = row.season2Rule1ActionName;
+        postData.rules.group2_adaysv_item1 = row.season2Rule1ActionValue;
+
+        postData.rules.group2_adaysid_item2 = row.season2Rule2Name;
+        postData.rules.group2_adaysm_item2 = row.season2Rule2ConditionName;
+        postData.rules.group2_adaysn_item2 = row.season2Rule2ConditionValue;
+        postData.rules.group2_adaysc_item2 = row.season2Rule2ActionName;
+        postData.rules.group2_adaysv_item2 = row.season2Rule2ActionValue;
+
+        let result: YBIExistingTariffResponseResult = {};
+        result.total = row.total;
+        result.xgs = row.rent;
+        result.desc = row.desc;
+        result.clean = row.cleaning;
+        result.gs = row.guestFee;
+
+        let res: YBIExistingTariffResponse = {
+            result: [result],
+            tariff_file: "xxxx",
+            post_data: postData
+        };
+
+        return res;
     }
 
     constructor(public http: Http) {

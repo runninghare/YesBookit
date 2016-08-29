@@ -27,7 +27,7 @@ declare var $: JQueryStatic;
 		{{testItem.description}}
 	</a>
 </div>
-<div class="pusher">
+<div class="pusher" style="background-color: #eceff1">
 	<div class="ui green menu">
 		<a href="" (click)="toggleMenu()" class="item">
 			<i class="big content icon"></i>

@@ -33,6 +33,6 @@
         onContextMenu($event) {
             console.log("=== context menu ===");
             console.log(this.elRef.nativeElement);
-            return false;
+            // return false;
         }
     }

@@ -64,22 +64,12 @@ export class TestPlanService {
 				"cds": 0,
 				"guest_surcharge": 8,
 				"test_scheme_override": {
+					"tax": 1.0,
 					"groups": []
 				},
 				"test_seasons_override": []
 			},
-			rules: {
-				// "group1_adaysc_item1": "P",
-				// "group1_adaysid_item1": "RULE 1",
-				// "group1_adaysm_item1": "M",
-				// "group1_adaysn_item1": 20,
-				// "group1_adaysv_item1": 201,
-				// "group1_adaysc_item2": "P",
-				// "group1_adaysid_item2": "RULE 2",
-				// "group1_adaysm_item2": "L",
-				// "group1_adaysn_item2": 30,
-				// "group1_adaysv_item2": 168
-			}
+			rules: {}
 		}
 	};
 
@@ -105,6 +95,7 @@ export class TestPlanService {
 			},
 			tariff: {
 				test_scheme_override: {
+					"tax": "*ALL*",
 					"groups": [1]
 				},
 				test_seasons_override: {
@@ -133,6 +124,7 @@ export class TestPlanService {
 			},
 			tariff: {
 				test_scheme_override: {
+					"tax": 1.0,
 					"groups": [1]
 				},
 				test_seasons_override: {
@@ -270,6 +262,11 @@ export class TestPlanService {
 				type: "number"
 			},
 			{
+				name: "tax",
+				title: "Tax Rate",
+				type: "number"
+			},
+			{
 				name: "season1PriceType",
 				title: "Season Price Type",
 				type: "string"
@@ -310,6 +307,9 @@ export class TestPlanService {
 			this.randomizePostData.season_test,
 			{
 				tariff: {
+					test_scheme_override: {
+						tax: [1.0,1.5]
+					},
 					group1_rate_type: ['V', 'F'],
         				group1_perrata_type:  ["PW","PN"],
 				}
@@ -440,7 +440,6 @@ export class TestPlanService {
 	}
 
 	constructor(public testDataGeneratorService: TestDataGeneratorService) {
-		console.log("--- construct test-plan service ---");
 		this.injectTestingData();
 	}
 

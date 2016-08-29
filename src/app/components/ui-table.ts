@@ -53,7 +53,7 @@ interface OrderType {
     </tr>
   </thead>
   <tbody>
-    <tr 	*ngFor="let row of pagedData$ | async" 
+    <tr  	*ngFor="let row of pagedData$ | async"
           	[class]="tableActions.applyRowClasses(row)" 
           	(click)="tableActions.clickRow(row)"
           >

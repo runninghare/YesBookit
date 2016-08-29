@@ -25,7 +25,7 @@
 							<div class="ui label" style="width: 100px">
 								Arrival
 							</div>
-							<input name="base price" disabled style="width: 50px" placeholder="Date" [(ngModel)]="dateData.booking_arrival" type="text">
+							<input name="base price" disabled style="width: 50px" placeholder="Date" [(ngModel)]="dateData.booking_arrival" type="number">
 						</div>
 					</div>
 					<div class="field">
@@ -33,7 +33,7 @@
 							<div class="ui label" style="width: 100px">
 								Departure
 							</div>
-							<input name="base price" disabled style="width: 50px" placeholder="Date" [(ngModel)]="dateData.booking_departure" type="text">
+							<input name="base price" disabled style="width: 50px" placeholder="Date" [(ngModel)]="dateData.booking_departure" type="number">
 						</div>
 					</div>
 					<div class="field">
@@ -41,7 +41,7 @@
 							<div class="ui label" style="width: 100px">
 								Adults
 							</div>
-							<input name="base price" style="width: 50px" placeholder="$dollar" [(ngModel)]="postData.user_input.guests.adults" type="text">
+							<input name="base price" style="width: 50px" placeholder="$dollar" [(ngModel)]="postData.user_input.guests.adults" type="number">
 						</div>
 					</div>
 					<div class="field">
@@ -49,7 +49,7 @@
 							<div class="ui label" style="width: 100px">
 								Children
 							</div>
-							<input name="base price" style="width: 50px" placeholder="$dollar" [(ngModel)]="postData.user_input.guests.children" type="text">
+							<input name="base price" style="width: 50px" placeholder="$dollar" [(ngModel)]="postData.user_input.guests.children" type="number">
 						</div>
 					</div>  					   					
 				</div>
@@ -64,14 +64,14 @@
    				</div>
    				<div class="ui content form">
    					<div class="field">
-   						<div class="three fields">
+   						<div class="four fields">
    							<div class="field">
    								<label for="base price">Property Price</label>
    								<div class="ui labeled input">
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>
-   									<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.base_nightly" type="text">
+   									<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.base_nightly" type="number">
    								</div>
    							</div>
    							<div class="field">
@@ -80,7 +80,7 @@
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>
-   									<input name="booking fee" placeholder="$dollar" [(ngModel)]="postData.tariff.booking_fee" type="text">
+   									<input name="booking fee" placeholder="$dollar" [(ngModel)]="postData.tariff.booking_fee" type="number">
    								</div>
    							</div>
    							<div class="field">
@@ -89,9 +89,18 @@
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>
-   									<input name="bond" placeholder="$dollar" [(ngModel)]="postData.tariff.bond" type="text">
+   									<input name="bond" placeholder="$dollar" [(ngModel)]="postData.tariff.bond" type="number">
    								</div>
-   							</div>                                      
+   							</div>                                 
+   							<div class="field">
+   								<label for="bond">Tax Rate</label>
+   								<div class="ui labeled input">
+   									<div class="ui label" style="width: 100px">
+   										<i class="dollar icon"></i>
+   									</div>
+   									<input name="tax rate" style="width: 50px" placeholder="Tax Rate" [(ngModel)]="postData.tariff.test_scheme_override.tax" type="number">
+   								</div>
+   							</div>
    						</div>
    					</div>
    					<div class="field">
@@ -102,7 +111,7 @@
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>
-   									<input name="cleaning base" placeholder="$dollar" [(ngModel)]="postData.tariff.cpb" type="text">
+   									<input name="cleaning base" placeholder="$dollar" [(ngModel)]="postData.tariff.cpb" type="number">
    								</div>
    							</div>
    							<div class="field">
@@ -111,7 +120,7 @@
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>
-   									<input name="cleaning per block" placeholder="$dollar" [(ngModel)]="postData.tariff.cpd" type="text">
+   									<input name="cleaning per block" placeholder="$dollar" [(ngModel)]="postData.tariff.cpd" type="number">
    								</div>
    							</div>
    							<div class="field">
@@ -120,7 +129,7 @@
    									<div class="ui label">
    										<i class="calendar icon"></i>
    									</div>
-   									<input name="cleaning day block" placeholder="number of days" [(ngModel)]="postData.tariff.cds" type="text">
+   									<input name="cleaning day block" placeholder="number of days" [(ngModel)]="postData.tariff.cds" type="number">
    								</div>
    							</div>                                    
    						</div>
@@ -133,7 +142,7 @@
    									<div class="ui label">
    										<i class="users icon"></i>
    									</div>
-   									<input name="guest min" placeholder="Min. Number" [(ngModel)]="postData.tariff.guest_min" type="text">
+   									<input name="guest min" placeholder="Min. Number" [(ngModel)]="postData.tariff.guest_min" type="number">
    								</div>
    							</div>
    							<div class="field">
@@ -142,7 +151,7 @@
    									<div class="ui label">
    										<i class="users icon"></i>
    									</div>                                        
-   									<input name="guest max" placeholder="Max. Number" [(ngModel)]="postData.tariff.guest_max" type="text">
+   									<input name="guest max" placeholder="Max. Number" [(ngModel)]="postData.tariff.guest_max" type="number">
    								</div>
    							</div>
    							<div class="field">
@@ -151,7 +160,7 @@
    									<div class="ui label">
    										<i class="user icon"></i>
    									</div>   
-   									<input name="guest above" placeholder="adults num" [(ngModel)]="postData.tariff.guest_above" type="text">
+   									<input name="guest above" placeholder="adults num" [(ngModel)]="postData.tariff.guest_above" type="number">
    								</div>
    							</div>         
    							<div class="field">
@@ -160,7 +169,7 @@
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>                                         
-   									<input name="guest surcharge" placeholder="$dollar" [(ngModel)]="postData.tariff.guest_surcharge" type="text">
+   									<input name="guest surcharge" placeholder="$dollar" [(ngModel)]="postData.tariff.guest_surcharge" type="number">
    								</div>        
    							</div> 
    							<div class="field">
@@ -169,7 +178,7 @@
    									<div class="ui label">
    										<i class="child icon"></i>
    									</div>                                         
-   									<input name="children above" placeholder="children num" [(ngModel)]="postData.tariff.child_above" type="text">
+   									<input name="children above" placeholder="children num" [(ngModel)]="postData.tariff.child_above" type="number">
    								</div>         
    							</div>         
    							<div class="field">
@@ -178,7 +187,7 @@
    									<div class="ui label">
    										<i class="dollar icon"></i>
    									</div>                                         
-   									<input name="children surcharge" placeholder="$dollar" [(ngModel)]="postData.tariff.child_surcharge" type="text">
+   									<input name="children surcharge" placeholder="$dollar" [(ngModel)]="postData.tariff.child_surcharge" type="number">
    								</div>        
    							</div>                                                                                                                                                   
    						</div>
@@ -212,7 +221,7 @@
    								<div class="ui label">
    									<i class="icon" [ngClass]="nightly.value=='F'?'asterisk':'dollar'"></i>
    								</div>
-   								<input name="base price" [placeholder]="nightly.value == 'F'?'Enter Rate, e.g. 1.1':'$dollar'" [(ngModel)]="postData.tariff.group1_nightly" type="text">
+   								<input name="base price" [placeholder]="nightly.value == 'F'?'Enter Rate, e.g. 1.1':'$dollar'" [(ngModel)]="postData.tariff.group1_nightly" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -221,7 +230,7 @@
    								<div class="ui label">
    									<i class="dollar icon"></i>
    								</div>
-   								<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.group1_optional_weekly" type="text">
+   								<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.group1_optional_weekly" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -249,7 +258,7 @@
    							<label for="price type">Condition</label>
    							<div class="ui labeled input">
    								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysm_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
-   									<option [value]="'L'">Less then</option>
+   									<option [value]="'L'">Less than</option>
    									<option [value]="'M'">More than</option>
    									<option [value]="'E'">Equal to</option>
    									<option [value]="'B'">Blocks Only</option>
@@ -265,7 +274,7 @@
    								<div class="ui label">
    									<i class="calendar icon"></i>
    								</div>
-   								<input name="base price"  [placeholder]="postData.rules.group1_adaysm_item1=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group1_adaysn_item1" type="text">
+   								<input name="base price"  [placeholder]="postData.rules.group1_adaysm_item1=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group1_adaysn_item1" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -284,7 +293,7 @@
    								<div class="ui label">
    									<i class="icon" [ngClass]="action.value=='F'?'asterisk':'dollar'"></i>
    								</div>
-   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group1_adaysv_item1" type="text">
+   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group1_adaysv_item1" type="number">
    							</div>
    						</div>
    					</div>
@@ -303,7 +312,7 @@
    							<label for="price type">Condition</label>
    							<div class="ui labeled input">
    								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group1_adaysm_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
-   									<option [value]="'L'">Less then</option>
+   									<option [value]="'L'">Less than</option>
    									<option [value]="'M'">More than</option>
    									<option [value]="'E'">Equal to</option>
    									<option [value]="'B'">Blocks Only</option>
@@ -319,7 +328,7 @@
    								<div class="ui label">
    									<i class="calendar icon"></i>
    								</div>
-   								<input name="base price"  [placeholder]="postData.rules.group1_adaysm_item2=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group1_adaysn_item2" type="text">
+   								<input name="base price"  [placeholder]="postData.rules.group1_adaysm_item2=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group1_adaysn_item2" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -338,7 +347,7 @@
    								<div class="ui label">
    									<i class="icon" [ngClass]="action.value=='F'?'asterisk':'dollar'"></i>
    								</div>
-   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group1_adaysv_item2" type="text">
+   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group1_adaysv_item2" type="number">
    							</div>
    						</div>
    					</div>
@@ -370,7 +379,7 @@
    								<div class="ui label">
    									<i class="icon" [ngClass]="nightly.value=='F'?'asterisk':'dollar'"></i>
    								</div>
-   								<input name="base price" [placeholder]="nightly.value == 'F'?'Enter Rate, e.g. 1.1':'$dollar'" [(ngModel)]="postData.tariff.group2_nightly" type="text">
+   								<input name="base price" [placeholder]="nightly.value == 'F'?'Enter Rate, e.g. 1.1':'$dollar'" [(ngModel)]="postData.tariff.group2_nightly" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -379,7 +388,7 @@
    								<div class="ui label">
    									<i class="dollar icon"></i>
    								</div>
-   								<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.group2_optional_weekly" type="text">
+   								<input name="base price" placeholder="$dollar" [(ngModel)]="postData.tariff.group2_optional_weekly" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -407,7 +416,7 @@
    							<label for="price type">Condition</label>
    							<div class="ui labeled input">
    								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysm_item1" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
-   									<option [value]="'L'">Less then</option>
+   									<option [value]="'L'">Less than</option>
    									<option [value]="'M'">More than</option>
    									<option [value]="'E'">Equal to</option>
    									<option [value]="'B'">Blocks Only</option>
@@ -423,7 +432,7 @@
    								<div class="ui label">
    									<i class="calendar icon"></i>
    								</div>
-   								<input name="base price"  [placeholder]="postData.rules.group2_adaysm_item1=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group2_adaysn_item1" type="text">
+   								<input name="base price"  [placeholder]="postData.rules.group2_adaysm_item1=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group2_adaysn_item1" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -442,7 +451,7 @@
    								<div class="ui label">
    									<i class="icon" [ngClass]="action2.value=='F'?'asterisk':'dollar'"></i>
    								</div>
-   								<input name="base price"  [placeholder]="action2.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group2_adaysv_item1" type="text">
+   								<input name="base price"  [placeholder]="action2.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group2_adaysv_item1" type="number">
    							</div>
    						</div>
    					</div>
@@ -461,7 +470,7 @@
    							<label for="price type">Condition</label>
    							<div class="ui labeled input">
    								<select class="ui fluid search dropdown" [(ngModel)]="postData.rules.group2_adaysm_item2" (ngModelChange)="seasonRateUpdate($event)" name="season_mode">
-   									<option [value]="'L'">Less then</option>
+   									<option [value]="'L'">Less than</option>
    									<option [value]="'M'">More than</option>
    									<option [value]="'E'">Equal to</option>
    									<option [value]="'B'">Blocks Only</option>
@@ -477,7 +486,7 @@
    								<div class="ui label">
    									<i class="calendar icon"></i>
    								</div>
-   								<input name="base price"  [placeholder]="postData.rules.group2_adaysm_item2=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group2_adaysn_item2" type="text">
+   								<input name="base price"  [placeholder]="postData.rules.group2_adaysm_item2=='D'?'Days of Week':'Number of Days'"  [(ngModel)]="postData.rules.group2_adaysn_item2" type="number">
    							</div>
    						</div>
    						<div class="field">
@@ -496,7 +505,7 @@
    								<div class="ui label">
    									<i class="icon" [ngClass]="action.value=='F'?'asterisk':'dollar'"></i>
    								</div>
-   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group2_adaysv_item2" type="text">
+   								<input name="base price"  [placeholder]="action.value=='F'?'Factor value':'Price'"  [(ngModel)]="postData.rules.group2_adaysv_item2" type="number">
    							</div>
    						</div>
    					</div>

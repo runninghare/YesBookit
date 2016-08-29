@@ -14,7 +14,24 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
   },
   {
     name: 'app.arbitrary',
-    component: ArbitraryTest
+    component: ArbitraryTest,
+    params: {
+      fromState: null,
+      fromStateParams: null
+    },
+    resolve: [
+      // Inject the bazList (from the parent) and find the correct
+      {
+        token: 'fromState', deps: [Transition], resolveFn: (trans) => {
+          return trans.params().fromState;
+        }
+      },
+      {
+        token: 'fromStateParams', deps: [Transition], resolveFn: (trans) => {
+          return trans.params().fromStateParams;
+        }
+      }
+    ]
   },
   {
     name: 'app.suites',

@@ -6,16 +6,27 @@ import {TestPlanItem, TestDataRow} from '../pojo/test-plan';
 import {TestPlanService} from '../services/test-plan.service';
 
 import {Http, Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subscription} from 'rxjs/Rx';
 
 import {TestUnit} from '../components/test-unit';
 
 import {RateCalcService} from '../services/rate-calc.service';
+import {UIRouter} from "ui-router-ng2";
 
 @Component({
     selector: "arbitrary-test",
     template: `
-    <h1>Arbitrary Unit Test</h1>
+    <div class="ui grid" style="margin-bottom: 10px">
+          <div class="six wide column">
+              <div class="ui header">
+                Arbitrary Unit Test
+              </div>
+              <div>DIY your tariff parameters and check results</div>
+          </div>
+          <div *ngIf="fromState" class="two wide column right floated">
+              <button (click)="goBack()" class="ui button">Go Back</button>
+          </div>
+      </div>
     <br />
     <div class="ui grid">
         <div class="row">
@@ -51,6 +62,9 @@ import {RateCalcService} from '../services/rate-calc.service';
 })
 export class ArbitraryTest implements OnInit {
 
+    @Input('fromState') fromState: string;
+    @Input('fromStateParams') fromStateParams: Object;
+
     testRepeat: number[] = Array.apply(null, Array(1)).map((d, i) => i);
 
     existingTotal: number;
@@ -61,18 +75,26 @@ export class ArbitraryTest implements OnInit {
     existingBooking: number;
     calcMessage: string;
 
+    subscriptionCurrentYBIRespnse: Subscription;
+    subscriptionPostData: Subscription;
+
+    goBack(): void {
+      this.uiRouter.stateService.go(this.fromState, this.fromStateParams, null) ;
+    }
+
     ngOnInit(): void {
 
         this.rateCalcService.setCurrentPostData(this.rateCalcService.currentPostData);
 
-        this.rateCalcService.currentPostData$.flatMap((postData: RatePostData) =>
+        this.subscriptionPostData = this.rateCalcService.currentPostData$.flatMap((postData: RatePostData) =>
             this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
         .subscribe((result: YBIExistingTariffResponse) => {
             this.rateCalcService.currentYBIResponse$.next(result);
         });
 
-        this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
+        this.subscriptionCurrentYBIRespnse = this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
             if (res && res.result && res.result.length > 0) {
+                // console.log(JSON.stringify(res));
                 this.existingTotal = res.result[0].total;
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;
@@ -85,6 +107,11 @@ export class ArbitraryTest implements OnInit {
         });
     }
 
-    constructor(public rateCalcService: RateCalcService, public http: Http) {
+    ngOnDestroy(): void {
+        this.subscriptionPostData.unsubscribe();
+        this.subscriptionCurrentYBIRespnse.unsubscribe();
+    }
+
+    constructor(public rateCalcService: RateCalcService, public http: Http, public uiRouter: UIRouter) {
     }
 }

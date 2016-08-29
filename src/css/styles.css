@@ -63,3 +63,7 @@
     .margin-v-20 {
         margin-bottom: 20px !important;
     }
+
+    tr.testrow:hover {
+        cursor:  pointer
+    }

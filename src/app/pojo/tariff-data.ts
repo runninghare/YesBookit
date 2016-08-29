@@ -39,9 +39,9 @@ export interface SchemeData {
 export interface TariffData {
         base_nightly?: number; 
         booking_fee?: number ; 
-        cds?: number;
-        cpb?: number; 
-        cpd ?: number;
+        cds?: number;   // Cleaning surcharge for x day block
+        cpb?: number;  // Cleaning per booking (base cleaning fee)
+        cpd ?: number;  // Cleaning surcharge for each day block
         exec?: number;
         bond?: number;
         guest_min?: number;
