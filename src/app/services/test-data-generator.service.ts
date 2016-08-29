@@ -293,6 +293,7 @@ export class TestDataGeneratorService {
 
                         if (tariff.test_seasons_override && tariff.test_seasons_override[1]) {
                             if (tariff.test_seasons_override[1].pairs.length > 0) {
+                                row.season1name = tariff.test_seasons_override[1].name;
                                 row.season1P1Start = tariff.test_seasons_override[1].pairs[0].from;
                                 row.season1P1End = tariff.test_seasons_override[1].pairs[0].to;
                                 if (tariff.test_seasons_override[1].pairs.length > 2) {
@@ -304,6 +305,7 @@ export class TestDataGeneratorService {
 
                         if (tariff.test_seasons_override && tariff.test_seasons_override[2]) {
                             if (tariff.test_seasons_override[2].pairs.length > 0) {
+                                row.season2name = tariff.test_seasons_override[2].name;
                                 row.season2P1Start = tariff.test_seasons_override[2].pairs[0].from;
                                 row.season2P1End = tariff.test_seasons_override[2].pairs[0].to;
                             }
@@ -343,7 +345,8 @@ export class TestDataGeneratorService {
             row.cleaning = res.result[0].clean;
             row.guestFee = res.result[0].gs;
             row.rent = res.result[0].xgs;
-            row.bondFee = res.result[0].Bfee;
+            row.bookingFee = res.result[0].Bfee;
+            row.bondFee = res.result[0].bond;
             row.desc = res.result[0].desc;
         }
 
@@ -363,29 +366,31 @@ export class TestDataGeneratorService {
                     departure: row.departure.split("/").map(n => parseInt(n))
                 };
 
-        row.basePrice && (postData.tariff.base_nightly = row.basePrice);
-        row.bookingFee && (postData.tariff.booking_fee = row.bookingFee);
-        row.cleaningDayBlock && (postData.tariff.cds = row.cleaningDayBlock);
-        row.cleaningPricePerBlock && (postData.tariff.cpd = row.cleaningPricePerBlock);
-        row.cleaningBase && (postData.tariff.cpb = row.cleaningBase);
-        row.adultsAbove && (postData.tariff.guest_above = row.adultsAbove);
-        row.childrenAbove && (postData.tariff.child_above = row.childrenAbove);
-        row.adultsSurchargeAbove && (postData.tariff.guest_surcharge = row.adultsSurchargeAbove);
-        row.childrenSurchargeAbove && (postData.tariff.child_surcharge = row.childrenSurchargeAbove);
-        row.tax && (postData.tariff.test_scheme_override.tax = row.tax);
+        postData.tariff.base_nightly = row.basePrice;
+        postData.tariff.booking_fee = row.bookingFee;
+        postData.tariff.cds = row.cleaningDayBlock;
+        postData.tariff.cpd = row.cleaningPricePerBlock;
+        postData.tariff.cpb = row.cleaningBase;
+        postData.tariff.guest_above = row.adultsAbove;
+        postData.tariff.child_above = row.childrenAbove;
+        postData.tariff.guest_surcharge = row.adultsSurchargeAbove;
+        postData.tariff.child_surcharge = row.childrenSurchargeAbove;
+        postData.tariff.test_scheme_override.tax = row.tax;
+        postData.tariff.bond = row.bondFee;
 
-        row.season1PriceType && (postData.tariff.group1_rate_type = row.season1PriceType);
-        row.season2PriceType && (postData.tariff.group2_rate_type = row.season2PriceType);
-        row.season1PriceOrFactor && (postData.tariff.group1_nightly = row.season1PriceOrFactor);
-        row.season2PriceOrFactor && (postData.tariff.group2_nightly = row.season2PriceOrFactor);
-        row.season1OptionalWeekly && (postData.tariff.group1_optional_weekly = row.season1OptionalWeekly);
-        row.season2OptionalWeekly && (postData.tariff.group2_optional_weekly = row.season2OptionalWeekly);
-        row.season1ProRataUse  && (postData.tariff.group1_perrata_type = row.season1ProRataUse);
-        row.season2ProRataUse  && (postData.tariff.group2_perrata_type = row.season2ProRataUse);
+        postData.tariff.group1_rate_type = row.season1PriceType;
+        postData.tariff.group2_rate_type = row.season2PriceType;
+        postData.tariff.group1_nightly = row.season1PriceOrFactor;
+        postData.tariff.group2_nightly = row.season2PriceOrFactor;
+        postData.tariff.group1_optional_weekly = row.season1OptionalWeekly;
+        postData.tariff.group2_optional_weekly = row.season2OptionalWeekly;
+        postData.tariff.group1_perrata_type = row.season1ProRataUse;
+        postData.tariff.group2_perrata_type = row.season2ProRataUse;
 
         if (row.season1P1Start) {
             postData.tariff.test_scheme_override.groups = [1];
             postData.tariff.test_seasons_override[1] = {};
+            postData.tariff.test_seasons_override[1] .name = row.season1name;
             postData.tariff.test_seasons_override[1].pairs = [{
                 from: row.season1P1Start,
                 to: row.season1P1End
@@ -402,6 +407,7 @@ export class TestDataGeneratorService {
         if (row.season2P1Start) {
             postData.tariff.test_scheme_override.groups = [1,2];
             postData.tariff.test_seasons_override[2] = {};
+            postData.tariff.test_seasons_override[2].name = row.season2name;
             postData.tariff.test_seasons_override[2].pairs = [{
                 from: row.season2P1Start,
                 to: row.season2P1End
@@ -438,6 +444,8 @@ export class TestDataGeneratorService {
         result.desc = row.desc;
         result.clean = row.cleaning;
         result.gs = row.guestFee;
+        result.Bfee = row.bookingFee;
+        result.bond = row.bondFee;
 
         let res: YBIExistingTariffResponse = {
             result: [result],

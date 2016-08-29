@@ -27,6 +27,7 @@ export interface TestDataRow {
 	tax?: number;
 
 	// season1 info
+	season1name?: string;
 	season1P1Start?: string;
 	season1P1End?: string;
 	season1P2Start?: string;
@@ -47,6 +48,7 @@ export interface TestDataRow {
 	season1Rule2ActionValue?: number;
 
 	// season2 info
+	season2name?:string;
 	season2P1Start?: string;
 	season2P1End?: string;
 	season2PriceType?: string;
