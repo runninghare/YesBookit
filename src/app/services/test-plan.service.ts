@@ -380,12 +380,12 @@ export class TestPlanService {
 			},			
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{
@@ -463,12 +463,12 @@ export class TestPlanService {
 			},
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{
@@ -557,12 +557,12 @@ export class TestPlanService {
 			},				
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{
@@ -665,12 +665,12 @@ export class TestPlanService {
 			},				
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{
@@ -782,12 +782,12 @@ export class TestPlanService {
 			},				
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{
@@ -877,12 +877,12 @@ export class TestPlanService {
 			},				
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{
@@ -975,12 +975,12 @@ export class TestPlanService {
 			},				
 			{
 				name: "total",
-				title: "Total ($)",
+				title: "Total.old ($)",
 				type: "number"
 			},
 			{
-				name: "guestFee",
-				title: "Guest Fee ($)",
+				name: "total2",
+				title: "Total.new ($)",
 				type: "number"
 			},
 			{

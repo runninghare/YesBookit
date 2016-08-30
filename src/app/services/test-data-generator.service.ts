@@ -239,7 +239,7 @@ export class TestDataGeneratorService {
     }
 
     public static ybiTestResultEvaluation(row: TestDataRow, success: () => {}, failure: () => {}): any {
-        if (row.total < 100000) {
+        if (row.total == row.total2 && row.cleaning == row.cleaning2) {
             return success();
         } else {
             return failure();
@@ -349,9 +349,19 @@ export class TestDataGeneratorService {
             row.cleaning = res.result[0].clean;
             row.guestFee = res.result[0].gs;
             row.rent = res.result[0].xgs;
-            row.bookingFee = res.result[0].Bfee;
+            row.resultBookingFee1 = res.result[0].Bfee;
             row.bondFee = res.result[0].bond;
             row.desc = res.result[0].desc;
+        }
+
+        if (res.result2 && res.result2.length > 0) {
+            row.total2 = res.result2[0].total;
+            row.cleaning2 = res.result2[0].clean;
+            row.guestFee2 = res.result2[0].gs;
+            row.rent2 = res.result2[0].xgs;
+            row.resultBookingFee2 = res.result2[0].Bfee;
+            row.bondFee2 = res.result2[0].bond;
+            row.desc2 = res.result2[0].desc;
         }
 
         // console.log(row);
@@ -449,11 +459,21 @@ export class TestDataGeneratorService {
         result.desc = row.desc;
         result.clean = row.cleaning;
         result.gs = row.guestFee;
-        result.Bfee = row.bookingFee;
+        result.Bfee = row.resultBookingFee1;
         result.bond = row.bondFee;
+
+        let result2: YBIExistingTariffResponseResult = {};
+        result2.total = row.total2;
+        result2.xgs = row.rent2;
+        result2.desc = row.desc2;
+        result2.clean = row.cleaning2;
+        result2.gs = row.guestFee2;
+        result2.Bfee = row.resultBookingFee2;
+        result2.bond = row.bondFee2;
 
         let res: YBIExistingTariffResponse = {
             result: [result],
+            result2: [result],
             tariff_file: "xxxx",
             post_data: postData
         };

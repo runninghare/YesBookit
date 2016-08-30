@@ -40,17 +40,20 @@ import {UIRouter} from "ui-router-ng2";
                        <span class="three wide column">{{existingClean}} (C)</span>
                    </div>
                    <div class="ui divider"></div>
-                   <div [innerHtml]="calcMessage"></div>                
+                   <div [innerHtml]="existingCalcMessage"></div>                
                 </div>
             </div>
             <div class="eight wide column">
-                <div class="ui segment raised">
-                     <div class="row">
-                       <span class="ui header blue">$ {{tcefTariff}}</span>
-                       <div class="ui blue label" style="float: right">TCEF Tariff</div>
+                <div class="ui segment raised" [ngClass]="resultMatch()?'':'inverted red'">
+                   <div class="ui grid">
+                       <span class="three wide column header" [class.green]="resultMatch()">$ \{{newTotal}}</span>
+                       <span class="four wide column">{{newRent}} (R)</span>
+                       <span class="three wide column">{{newGuest}} (G)</span>
+                       <span class="three wide column">{{newBooking}} (B)</span>
+                       <span class="three wide column">{{newClean}} (C)</span>
                    </div>
                    <div class="ui divider"></div>
-                   <div [innerHtml]="calcTcefMessage"></div>                   
+                   <div [innerHtml]="newCalcMessage"></div>                                
                 </div> 
             </div>
         </div>
@@ -73,13 +76,25 @@ export class ArbitraryTest implements OnInit {
     existingClean: number;
     existingBond: number;
     existingBooking: number;
-    calcMessage: string;
+    existingCalcMessage: string;
+
+    newTotal: number;
+    newRent: number;
+    newGuest: number;
+    newClean: number;
+    newBond: number;
+    newBooking: number;
+    newCalcMessage: string;
 
     subscriptionCurrentYBIRespnse: Subscription;
     subscriptionPostData: Subscription;
 
     goBack(): void {
       this.uiRouter.stateService.go(this.fromState, this.fromStateParams, null) ;
+    }
+
+    resultMatch(): boolean {
+      return this.existingTotal == this.newTotal && this.existingClean == this.newClean;
     }
 
     ngOnInit(): void {
@@ -94,14 +109,22 @@ export class ArbitraryTest implements OnInit {
 
         this.subscriptionCurrentYBIRespnse = this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
             if (res && res.result && res.result.length > 0) {
-                // console.log(JSON.stringify(res));
+                console.log(JSON.stringify(res));
                 this.existingTotal = res.result[0].total;
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;
                 this.existingBooking = res.result[0].Bfee;
                 this.existingClean = res.result[0].clean;
                 this.existingBond = res.result[0].bond;
-                this.calcMessage = res.result[0].desc;
+                this.existingCalcMessage = res.result[0].desc;
+
+                this.newTotal = res.result2[0].total;
+                this.newRent = res.result2[0].xgs;
+                this.newGuest = res.result2[0].gs;
+                this.newBooking = res.result2[0].Bfee;
+                this.newClean = res.result2[0].clean;
+                this.newBond = res.result2[0].bond;
+                this.newCalcMessage = res.result2[0].desc;
                 // console.log(res.result[0]);
             }
         });

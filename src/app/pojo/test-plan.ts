@@ -66,14 +66,26 @@ export interface TestDataRow {
 	season2Rule2ActionName?: string;
 	season2Rule2ActionValue?: number;
 
-	// calculated results
+	// calculated existing results
 	total?: number;
 	rent?: number;
 	cleaning?: number;
 	guestFee?: number;
 	bondFee?: number;
+	resultBookingFee1?: number;
 	desc?: string;
 	testResult?: string;
+
+	// calculated new results
+	total2?: number;
+	rent2?: number;
+	cleaning2?: number;
+	guestFee2?: number;
+	bondFee2?: number;
+	resultBookingFee2?: number;
+	desc2?: string;
+	testResult2?: string;
+
 	id?: number;
 }
 

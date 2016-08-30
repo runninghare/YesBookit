@@ -22,5 +22,6 @@ export interface YBIExistingTariffResponseResult {
 export interface YBIExistingTariffResponse {
     tariff_file: string;
     result: YBIExistingTariffResponseResult[];
+    result2?: YBIExistingTariffResponseResult[];
     post_data: RatePostData;
 }
