@@ -16,31 +16,42 @@ export class TestPlanService {
 		{
 			name: "suite1",
 			title: "Suite 1",
-			description: "Property Tariff tests without seasonal settings",
-			numOfTests: 5
+			description: "Property Tariff tests without seasonal settings"
 		},
 		{
 			name: "suite2",
 			title: "Suite 2",
-			description: "Property Tariff + Single Season w/o rules & w/o crossover",
-			numOfTests: 4
+			description: "Property Tariff + Single Season w/o rules & w/o crossover"
 		},
 		{
 			name: "suite3",
 			title: "Suite 3",
-			description: "Property Tariff + Single Season with rules but w/o crossover",
-			numOfTests: 84
+			description: "Property Tariff + Single Season with rules but w/o crossover"
 		},
 		{
 			name: "suite4",
 			title: "Suite 4",
-			description: "Crossover Tests",
-			numOfTests: 168
+			description: "Crossover Tests - 1 season 1 period"
+		},
+		{
+			name: "suite5",
+			title: "Suite 5",
+			description: "Crossover Tests - 1 season 2 periods"
+		},
+		{
+			name: "suite6",
+			title: "Suite 6",
+			description: "Crossover Tests - 2 seasons adjacent"
+		},
+		{
+			name: "suite7",
+			title: "Suite 7",
+			description: "Crossover Tests - 2 seasons with gap in between"
 		}
 	];
 
 	basePostData: any = {
-		no_season:  {
+		baseline:  {
 			user_input: {
 				guests: {
 					adults: 1,
@@ -91,7 +102,7 @@ export class TestPlanService {
 		season_test: {
 			user_input: {
 				arrival: [2017, 8, 27],
-				departure: [2017, 9, 6]
+				departure: "*ALL*"
 			},
 			tariff: {
 				test_scheme_override: {
@@ -149,6 +160,170 @@ export class TestPlanService {
 				"group1_adaysm_item1": "*ALL*",
 				"group1_adaysn_item1": 5,
 				"group1_adaysv_item1": 201
+			}
+		},
+
+		crossover_1s1p:   {
+			user_input: "*ALL*",
+			tariff: {
+				test_scheme_override: {
+					"groups": [1]
+				},
+				test_seasons_override: {
+					"1":  {
+						"name": "Blue Season",
+						"pairs": [
+							{
+								"from": "21/08/2017",
+								"to": "31/08/2017"
+							}
+						]
+					}
+				},
+				group1_rate_type: "*ALL*",
+        			group1_perrata_type: "*ALL*",
+        			group1_nightly: 160,
+        			group1_optional_weekly: 510
+			},
+			rules: {
+				"group1_adaysid_item1": "*ALL*",
+				"group1_adaysc_item1": "*ALL*",
+				"group1_adaysm_item1": "*ALL*",
+				"group1_adaysn_item1": 5,
+				"group1_adaysv_item1": 201
+			}
+		},
+
+		crossover_1s2p:   {
+			user_input: "*ALL*",
+			tariff: {
+				test_scheme_override: {
+					"groups": [1]
+				},				
+				test_seasons_override: {
+					"1":  {
+						"name": "Blue Season",
+						"pairs": [
+							{
+								"from": "21/08/2017",
+								"to": "31/08/2017"
+							},
+							{
+								"from": "4/09/2017",
+								"to": "12/09/2017"
+							}
+						]
+					}
+				},
+				group1_rate_type: "*ALL*",
+        			group1_perrata_type: "*ALL*",
+        			group1_nightly: 160,
+        			group1_optional_weekly: 510
+			},
+			rules: {
+				"group1_adaysid_item1": "*ALL*",
+				"group1_adaysc_item1": "*ALL*",
+				"group1_adaysm_item1": "*ALL*",
+				"group1_adaysn_item1": 5,
+				"group1_adaysv_item1": 201
+			}
+		},
+
+		crossover_2s_adjacent: {		
+			user_input: "*ALL*",
+			tariff: {
+				test_scheme_override: {
+					"groups": [1,2]
+				},		
+				test_seasons_override: {
+					"1":  {
+						"name": "Blue Season",
+						"pairs": [
+							{
+								"from": "21/08/2017",
+								"to": "31/08/2017"
+							}
+						]
+					},
+					"2":  {
+						"name": "Orange Season",
+						"pairs": [
+							{
+								"from": "1/09/2017",
+								"to": "12/09/2017"
+							}
+						]
+					}
+				},
+				group1_rate_type: "*ALL*",
+        			group1_perrata_type: "*ALL*",
+        			group1_nightly: 160,
+        			group1_optional_weekly: 510,
+        			group2_rate_type: "*ALL*",
+        			group2_perrata_type: "*ALL*",
+        			group2_nightly: 160,
+        			group2_optional_weekly: 510
+			},
+			rules: {
+				"group1_adaysid_item1": "*ALL*",
+				"group1_adaysc_item1": "*ALL*",
+				"group1_adaysm_item1": "*ALL*",
+				"group1_adaysn_item1": "*ALL*",
+				"group1_adaysv_item1": 201,
+				"group2_adaysid_item1": "*ALL*",
+				"group2_adaysc_item1": "*ALL*",
+				"group2_adaysm_item1": "*ALL*",
+				"group2_adaysn_item1": "*ALL*",
+				"group2_adaysv_item1": 201
+			}
+		},
+
+		crossover_2s_gap: {
+			user_input: "*ALL*",
+			tariff: {
+				test_scheme_override: {
+					"groups": [1,2]
+				},					
+				test_seasons_override: {
+					"1":  {
+						"name": "Blue Season",
+						"pairs": [
+							{
+								"from": "21/08/2017",
+								"to": "31/08/2017"
+							}
+						]
+					},
+					"2":  {
+						"name": "Orange Season",
+						"pairs": [
+							{
+								"from": "4/09/2017",
+								"to": "12/09/2017"
+							}
+						]
+					}
+				},
+				group1_rate_type: "*ALL*",
+        			group1_perrata_type: "*ALL*",
+        			group1_nightly: 160,
+        			group1_optional_weekly: 510,
+        			group2_rate_type: "*ALL*",
+        			group2_perrata_type: "*ALL*",
+        			group2_nightly: 160,
+        			group2_optional_weekly: 510
+			},
+			rules: {
+				"group1_adaysid_item1": "*ALL*",
+				"group1_adaysc_item1": "*ALL*",
+				"group1_adaysm_item1": "*ALL*",
+				"group1_adaysn_item1": "*ALL*",
+				"group1_adaysv_item1": 201,
+				"group2_adaysid_item1": "*ALL*",
+				"group2_adaysc_item1": "*ALL*",
+				"group2_adaysm_item1": "*ALL*",
+				"group2_adaysn_item1": "*ALL*",
+				"group2_adaysv_item1": 201
 			}
 		}
 	}
@@ -220,7 +395,7 @@ export class TestPlanService {
 			}
 		];
 
-		this.testPlan[0].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.no_season,
+		this.testPlan[0].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
 			this.randomizePostData.booking_info,
 			{
 				user_input: {
@@ -303,9 +478,15 @@ export class TestPlanService {
 			}
 		];
 
-		this.testPlan[1].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.no_season,
+		this.testPlan[1].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
 			this.randomizePostData.season_test,
-			{
+			{	
+				user_input: {
+					departure: [
+						[2017, 8, 31],
+						[2017, 9, 6]
+					]
+				},
 				tariff: {
 					test_scheme_override: {
 						tax: [1.0,1.5]
@@ -391,7 +572,7 @@ export class TestPlanService {
 			}
 		];
 
-		this.testPlan[2].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.no_season,
+		this.testPlan[2].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
 			this.randomizePostData.season_with_rules,
 			{
 				user_input: {
@@ -419,13 +600,438 @@ export class TestPlanService {
 			testItem.numOfSuccesses = 0;
 		});
 
+		// ===== Suite 4 Unit test =====
+		// 
+		this.testPlan[3].testResultConfig = [
+			{
+				name: "id",
+				title: "ID",
+				type: "number"
+			},
+			{
+				name: "arrival",
+				title: "Arrival",
+				type: "string"
+			},
+			{
+				name: "departure",
+				title: "Departure",
+				type: "string"
+			},
+			{
+				name: "basePrice",
+				title: "Base Price ($)",
+				type: "number"
+			},
+			{
+				name: "season1PriceType",
+				title: "Season Price Type",
+				type: "string"
+			},
+			{
+				name: "season1PriceOrFactor",
+				title: "Season Price/Factor",
+				type: "number"
+			},
+			{
+				name: "season1ProRataUse",
+				title: "Pro Rata",
+				type: "string"
+			},	
+			{
+				name: "season1OptionalWeekly",
+				title: "Optional Weekly",
+				type: "string"
+			},
+			{
+				name: "season1Rule1ConditionName",
+				title: "Condition",
+				type: "string"
+			},	
+			{
+				name: "season1Rule1ConditionValue",
+				title: "Condition.V",
+				type: "number"
+			},						
+			{
+				name: "season1Rule1ActionName",
+				title: "Action",
+				type: "string"
+			},	
+			{
+				name: "season1Rule1ActionValue",
+				title: "Action.V",
+				type: "number"
+			},				
+			{
+				name: "total",
+				title: "Total ($)",
+				type: "number"
+			},
+			{
+				name: "guestFee",
+				title: "Guest Fee ($)",
+				type: "number"
+			},
+			{
+				name: "testResult",
+				title: "Test Result",
+				type: "string"
+			}
+		];
+
+		this.testPlan[3].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
+			this.randomizePostData.crossover_1s1p,
+			{
+				user_input: [
+					{
+						arrival: [2017, 8, 17],
+						departure: [2017, 8, 22]
+					},
+					{
+						arrival: [2017, 8, 17],
+						departure: [2017, 8, 26]
+					},
+					{
+						arrival: [2017, 8, 28],
+						departure: [2017, 9, 2]
+					},
+					{
+						arrival: [2017, 8, 24],
+						departure: [2017, 9, 2]
+					},
+					{
+						arrival: [2017, 8, 18],
+						departure: [2017, 9, 6]
+					}
+				],
+				tariff: {
+					group1_rate_type: ['V'],
+        				group1_perrata_type:  ["PN"],
+				}, 
+				rules: {
+					group1_adaysid_item1: ["Rule 1"],
+					group1_adaysm_item1: TestVectors.condition_type_vector,
+					group1_adaysc_item1: TestVectors.action_type_vector
+				}
+			}
+		);
+
+		// ===== Suite 5 Unit test =====
+		// 
+		this.testPlan[4].testResultConfig = [
+			{
+				name: "id",
+				title: "ID",
+				type: "number"
+			},
+			{
+				name: "arrival",
+				title: "Arrival",
+				type: "string"
+			},
+			{
+				name: "departure",
+				title: "Departure",
+				type: "string"
+			},
+			{
+				name: "basePrice",
+				title: "Base Price ($)",
+				type: "number"
+			},
+			{
+				name: "season1PriceType",
+				title: "Season Price Type",
+				type: "string"
+			},
+			{
+				name: "season1PriceOrFactor",
+				title: "Season Price/Factor",
+				type: "number"
+			},
+			{
+				name: "season1ProRataUse",
+				title: "Pro Rata",
+				type: "string"
+			},	
+			{
+				name: "season1OptionalWeekly",
+				title: "Optional Weekly",
+				type: "string"
+			},
+			{
+				name: "season1Rule1ConditionName",
+				title: "Condition",
+				type: "string"
+			},	
+			{
+				name: "season1Rule1ConditionValue",
+				title: "Condition.V",
+				type: "number"
+			},						
+			{
+				name: "season1Rule1ActionName",
+				title: "Action",
+				type: "string"
+			},	
+			{
+				name: "season1Rule1ActionValue",
+				title: "Action.V",
+				type: "number"
+			},				
+			{
+				name: "total",
+				title: "Total ($)",
+				type: "number"
+			},
+			{
+				name: "guestFee",
+				title: "Guest Fee ($)",
+				type: "number"
+			},
+			{
+				name: "testResult",
+				title: "Test Result",
+				type: "string"
+			}
+		];
+
+		this.testPlan[4].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
+			this.randomizePostData.crossover_1s2p,
+			{
+				user_input: [
+					{
+						arrival: [2017, 8, 18],
+						departure: [2017, 9, 6]
+					},
+					{
+						arrival: [2017, 8, 25],
+						departure: [2017, 9, 13]
+					}
+				],
+				tariff: {
+					group1_rate_type: ['V'],
+        				group1_perrata_type:  ["PN"],
+				}, 
+				rules: {
+					group1_adaysid_item1: ["Rule 1"],
+					group1_adaysm_item1: TestVectors.condition_type_vector,
+					group1_adaysc_item1: TestVectors.action_type_vector
+				}
+			}
+		);
+
+		// ===== Suite 6 Unit test =====
+		// 
+		this.testPlan[5].testResultConfig = [
+			{
+				name: "id",
+				title: "ID",
+				type: "number"
+			},
+			{
+				name: "arrival",
+				title: "Arrival",
+				type: "string"
+			},
+			{
+				name: "departure",
+				title: "Departure",
+				type: "string"
+			},
+			{
+				name: "basePrice",
+				title: "Base Price ($)",
+				type: "number"
+			},
+			{
+				name: "season1PriceType",
+				title: "Season Price Type",
+				type: "string"
+			},
+			{
+				name: "season1PriceOrFactor",
+				title: "Season Price/Factor",
+				type: "number"
+			},
+			{
+				name: "season1Rule1Name",
+				title: "Season 1 Rule",
+				type: "string"
+			},
+			{
+				name: "season2Rule1Name",
+				title: "Season 2 Rule",
+				type: "string"
+			},					
+			{
+				name: "season1Rule1ActionName",
+				title: "Action",
+				type: "string"
+			},	
+			{
+				name: "season1Rule1ActionValue",
+				title: "Action.V",
+				type: "number"
+			},				
+			{
+				name: "total",
+				title: "Total ($)",
+				type: "number"
+			},
+			{
+				name: "guestFee",
+				title: "Guest Fee ($)",
+				type: "number"
+			},
+			{
+				name: "testResult",
+				title: "Test Result",
+				type: "string"
+			}
+		];
+
+		this.testPlan[5].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
+			this.randomizePostData.crossover_2s_adjacent,
+			{
+				user_input: [
+					{
+						arrival: [2017, 8, 22],
+						departure: [2017, 9, 8]
+					}
+				],
+				tariff: {
+					group1_rate_type: ['V', 'F'],
+        				group1_perrata_type:  ["PN"],
+        				group2_rate_type: ['V', 'F'],
+        				group2_perrata_type:  ["PN"],
+				}, 
+				rules: {
+					group1_adaysid_item1: ["", "Rule 1"],
+					group1_adaysm_item1: ["M"],
+					group1_adaysc_item1: ["P"],
+					group1_adaysn_item1: [15],
+					group2_adaysid_item1: ["", "Rule 1"],
+					group2_adaysm_item1: ["M"],
+					group2_adaysc_item1: ["P"],
+					group2_adaysn_item1: [15],
+				}
+			}
+		);
+
+		// ===== Suite 7 Unit test =====
+		// 
+		this.testPlan[6].testResultConfig = [
+			{
+				name: "id",
+				title: "ID",
+				type: "number"
+			},
+			{
+				name: "arrival",
+				title: "Arrival",
+				type: "string"
+			},
+			{
+				name: "departure",
+				title: "Departure",
+				type: "string"
+			},
+			{
+				name: "basePrice",
+				title: "Base Price ($)",
+				type: "number"
+			},
+			{
+				name: "season1PriceType",
+				title: "Season Price Type",
+				type: "string"
+			},
+			{
+				name: "season1PriceOrFactor",
+				title: "Season Price/Factor",
+				type: "number"
+			},
+			{
+				name: "season1Rule1Name",
+				title: "Season 1 Rule",
+				type: "string"
+			},
+			{
+				name: "season2Rule1Name",
+				title: "Season 2 Rule",
+				type: "string"
+			},					
+			{
+				name: "season1Rule1ActionName",
+				title: "Action",
+				type: "string"
+			},	
+			{
+				name: "season1Rule1ActionValue",
+				title: "Action.V",
+				type: "number"
+			},				
+			{
+				name: "total",
+				title: "Total ($)",
+				type: "number"
+			},
+			{
+				name: "guestFee",
+				title: "Guest Fee ($)",
+				type: "number"
+			},
+			{
+				name: "testResult",
+				title: "Test Result",
+				type: "string"
+			}
+		];
+
+		this.testPlan[6].testVector = this.testDataGeneratorService.generateAllTestingDataWithSpec(this.basePostData.baseline,
+			this.randomizePostData.crossover_2s_gap,
+			{
+				user_input: [
+					{
+						arrival: [2017, 8, 22],
+						departure: [2017, 9, 10]
+					}
+				],
+				tariff: {
+					group1_rate_type: ['V', 'F'],
+        				group1_perrata_type:  ["PN"],
+        				group2_rate_type: ['V', 'F'],
+        				group2_perrata_type:  ["PN"],
+				}, 
+				rules: {
+					group1_adaysid_item1: ["", "Rule 1"],
+					group1_adaysm_item1: ["M"],
+					group1_adaysc_item1: ["P"],
+					group1_adaysn_item1: [15],
+					group2_adaysid_item1: ["", "Rule 1"],
+					group2_adaysm_item1: ["M"],
+					group2_adaysc_item1: ["P"],
+					group2_adaysn_item1: [15],
+				}
+			}
+		);
+
+		this.testPlan.forEach((testItem: TestPlanItem) => {
+			testItem.currentResultData$ = new BehaviorSubject<TestDataRow[]>([]);
+			testItem.numOfTests = testItem.testVector ? testItem.testVector.length : 0;
+			testItem.numOfFailures = 0;
+			testItem.numOfSuccesses = 0;
+		});		
+
 	}
 
 	getTestPlanItems(): TestPlanItem[] {
 		return this.testPlan;
 	}
 
-	// suite number must be 1 - 4
+	// suite number must be greater than 0
 	createTestResult(testItem: TestPlanItem): Observable<TestDataRow[]> {
 
 		let index = this.testPlan.indexOf(testItem);

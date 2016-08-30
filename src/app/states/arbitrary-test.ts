@@ -94,7 +94,7 @@ export class ArbitraryTest implements OnInit {
 
         this.subscriptionCurrentYBIRespnse = this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
             if (res && res.result && res.result.length > 0) {
-                console.log(JSON.stringify(res));
+                // console.log(JSON.stringify(res));
                 this.existingTotal = res.result[0].total;
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;

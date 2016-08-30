@@ -163,6 +163,10 @@ export class TestDataGeneratorService {
         // concat solution
         let httpReses: Observable<YBIExistingTariffResponse>[] = postArray.map((postData) =>
             this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json())
+            // .do((r) => {
+            //     console.log("--- http response ---");
+            //     console.log(r);
+            // })
         )
 
         return Observable.concat(...httpReses);
@@ -296,7 +300,7 @@ export class TestDataGeneratorService {
                                 row.season1name = tariff.test_seasons_override[1].name;
                                 row.season1P1Start = tariff.test_seasons_override[1].pairs[0].from;
                                 row.season1P1End = tariff.test_seasons_override[1].pairs[0].to;
-                                if (tariff.test_seasons_override[1].pairs.length > 2) {
+                                if (tariff.test_seasons_override[1].pairs.length > 1) {
                                     row.season1P2Start = tariff.test_seasons_override[1].pairs[1].from;
                                     row.season1P2End = tariff.test_seasons_override[1].pairs[1].to;
                                 }
@@ -350,6 +354,7 @@ export class TestDataGeneratorService {
             row.desc = res.result[0].desc;
         }
 
+        // console.log(row);
         return row;
     }
 
