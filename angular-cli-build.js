@@ -18,6 +18,9 @@ module.exports = function(defaults) {
       'ui-router-ng2/_bundles/ui-router-ng2.min.js',
       'jquery-ui-dist/jquery-ui.min.{js,css}',
       'moment/min/moment.min.js',
+      'highcharts/highcharts.js',
+      'highcharts/highcharts-more.js',
+      'highcharts/css/*'
     ]
   });
 };

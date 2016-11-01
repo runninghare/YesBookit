@@ -13,6 +13,7 @@ import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 import {RateCalcService} from './rate-calc.service';
 import {TestVectors} from './test-vector.service';
 import {TestDataRow} from '../pojo/test-plan';
+import {environment} from '../environment';
 
 declare var $: JQueryStatic;
 
@@ -22,8 +23,8 @@ export class TestDataGeneratorService {
     public static defaultPostData: RatePostData = {
         user_input: {
             guests: {
-                adults: 2,
-                children: 2
+                adults: 1,
+                children: 0
             },
             arrival: [2017, 8, 18],
             departure: [2017, 9, 10]
@@ -36,7 +37,7 @@ export class TestDataGeneratorService {
             "guest_min": 1,
             "child_surcharge": 7,
             "cpd": 3,
-            "booking_fee": 800,
+            "booking_fee": 8,
             "exec": 0,
             "bond": 500,
             "cpb": 15,
@@ -128,15 +129,17 @@ export class TestDataGeneratorService {
                 newDef[k] = def[k];
             })
             let resultArray = [];
+            let nextLevelArray = this.recurGetAllCombs(newDef);
             values.map((val) => {
-                this.recurGetAllCombs(newDef).map((obj) => {
+                nextLevelArray.map((obj) => {
                     let newObj = {};
                     Object.keys(obj).map((k) => {
                         newObj[k] = obj[k];
                     });
                     newObj[name] = val;
                     resultArray.push(newObj);
-                })
+                });
+                nextLevelArray = nextLevelArray.reverse();
             });
             return resultArray;
         }
@@ -162,7 +165,7 @@ export class TestDataGeneratorService {
 
         // concat solution
         let httpReses: Observable<YBIExistingTariffResponse>[] = postArray.map((postData) =>
-            this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json())
+            this.http.post(`${environment.API_BASE}/test-tariff.pl`, JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json())
             // .do((r) => {
             //     console.log("--- http response ---");
             //     console.log(r);

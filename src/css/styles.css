@@ -67,3 +67,7 @@
     tr.testrow:hover {
         cursor:  pointer
     }
+
+    .ui-table-td:hover {
+        background-color: #CCEEFF;
+    }

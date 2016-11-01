@@ -16,17 +16,17 @@ export class TestPlanService {
 		{
 			name: "suite1",
 			title: "Suite 1",
-			description: "Property Tariff tests without seasonal settings"
+			description: "Adult/Children Surcharge"
 		},
 		{
 			name: "suite2",
 			title: "Suite 2",
-			description: "Property Tariff + Single Season w/o rules & w/o crossover"
+			description: "Single Season w/o rules & w/o crossover"
 		},
 		{
 			name: "suite3",
 			title: "Suite 3",
-			description: "Property Tariff + Single Season with rules but w/o crossover"
+			description: "Single Season with rules but w/o crossover"
 		},
 		{
 			name: "suite4",
@@ -78,7 +78,7 @@ export class TestPlanService {
 					"tax": 1.0,
 					"groups": []
 				},
-				"test_seasons_override": []
+				"test_seasons_override": {}
 			},
 			rules: {}
 		}
@@ -95,7 +95,9 @@ export class TestPlanService {
 				departure: "*ALL*"
 			},
 			tariff: {
-				base_nightly: "*ALL*"
+				base_nightly: "*ALL*",
+				guest_above: "*ALL*",
+				child_above: "*ALL*"
 			}
 		},
 
@@ -400,20 +402,20 @@ export class TestPlanService {
 			{
 				user_input: {
 					guests: {
-						adults: [0,1,2,3,4],
+						adults: [0,1,2,3,4,5],
 						children: [0,1,2,3,4]
 					},
 					arrival: [
 						[2017, 8, 15]
 					],
 					departure: [
-						[2017, 9, 15],
-						[2017, 9, 16],
-						[2017, 9, 20]
+						[2017, 9, 16]
 					]
 				},
 				tariff: {
-					base_nightly: [100]
+					base_nightly: [100],
+					guest_above: [0,1,2],
+					child_above: [0,1,2],
 				}
 			}
 		);

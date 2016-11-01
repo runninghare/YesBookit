@@ -10,6 +10,9 @@
     },
     "moment/moment-node.d.ts": {
       "commit": "88c0d5f868bc184d70b6799d36b1946787beb48d"
+    },
+    "highcharts/highcharts.d.ts": {
+      "commit": "44be13ae844ec0721109542d5902e41438d72855"
     }
   }
 }

@@ -3,6 +3,7 @@
  import {ArbitraryTest} from "./states/arbitrary-test";
  import {Ng2StateDeclaration, Transition} from "ui-router-ng2";
  import {MySpike} from "./components/my-spike";
+ import {PreviewRates} from "./components/preview-rates";
 
  // The top level states
 let MAIN_STATES: Ng2StateDeclaration[] = [
@@ -10,10 +11,12 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
   // <ui-view></ui-view> (defined in index.html) with the AppComponent
   {
     name: 'app',
+    url: '/',
     component: AppComponent
   },
   {
     name: 'app.arbitrary',
+    url: 'arbitrary',
     component: ArbitraryTest,
     params: {
       fromState: null,
@@ -35,6 +38,7 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
   },
   {
     name: 'app.suites',
+    url: 'suite/:name',
     component: Suites,
     params: { 
       name: null 
@@ -50,7 +54,13 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
   },
   {
     name: 'app.spike',
+    url: 'spike',
     component: MySpike
+  },
+  {
+    name: 'app.preview-rates',
+    url: 'preview-rates',
+    component: PreviewRates
   }
 ];
 

@@ -12,6 +12,7 @@ import {TestUnit} from '../components/test-unit';
 
 import {RateCalcService} from '../services/rate-calc.service';
 import {UIRouter} from "ui-router-ng2";
+import {environment} from "../environment";
 
 @Component({
     selector: "arbitrary-test",
@@ -25,6 +26,9 @@ import {UIRouter} from "ui-router-ng2";
           </div>
           <div *ngIf="fromState" class="two wide column right floated">
               <button (click)="goBack()" class="ui button">Go Back</button>
+          </div>
+          <div class="three wide column right floated">
+              <button (click)="previewRates()" class="ui button">Preview Rates</button>
           </div>
       </div>
     <br />
@@ -93,8 +97,12 @@ export class ArbitraryTest implements OnInit {
       this.uiRouter.stateService.go(this.fromState, this.fromStateParams, null) ;
     }
 
+    previewRates(): void {
+      this.uiRouter.stateService.go("app.preview-rates");
+    }
+
     resultMatch(): boolean {
-      return this.existingTotal == this.newTotal && this.existingClean == this.newClean;
+      return this.existingTotal == this.newTotal;
     }
 
     ngOnInit(): void {
@@ -102,7 +110,7 @@ export class ArbitraryTest implements OnInit {
         this.rateCalcService.setCurrentPostData(this.rateCalcService.currentPostData);
 
         this.subscriptionPostData = this.rateCalcService.currentPostData$.flatMap((postData: RatePostData) =>
-            this.http.post("http://app01.yesbookit.com/cgi-bin/test-tariff.pl", JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
+            this.http.post(`${environment.API_BASE}/test-tariff.pl`, JSON.stringify(postData)).map((res: Response) => <YBIExistingTariffResponse>res.json()))
         .subscribe((result: YBIExistingTariffResponse) => {
             this.rateCalcService.currentYBIResponse$.next(result);
         });
@@ -110,7 +118,7 @@ export class ArbitraryTest implements OnInit {
         this.subscriptionCurrentYBIRespnse = this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
             if (res && res.result && res.result.length > 0) {
                 console.log(JSON.stringify(res));
-                this.existingTotal = res.result[0].total;
+                this.existingTotal = parseInt(<any>res.result[0].total) + parseInt(<any>res.result[0].clean);
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;
                 this.existingBooking = res.result[0].Bfee;
@@ -118,7 +126,7 @@ export class ArbitraryTest implements OnInit {
                 this.existingBond = res.result[0].bond;
                 this.existingCalcMessage = res.result[0].desc;
 
-                this.newTotal = res.result2[0].total;
+                this.newTotal = parseInt(<any>res.result2[0].total) + parseInt(<any>res.result2[0].clean);
                 this.newRent = res.result2[0].xgs;
                 this.newGuest = res.result2[0].gs;
                 this.newBooking = res.result2[0].Bfee;
