@@ -4,6 +4,8 @@ import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 import {PreviewRatesService, RatesPreviewRange} from '../services/preview-rates.service';
 import {UIRouter} from "ui-router-ng2";
 
+declare var $: JQueryStatic;
+
 @Component({
     template: `
   <!--      
@@ -17,7 +19,29 @@ import {UIRouter} from "ui-router-ng2";
 
         <hr />
   -->      
-        <div id="rate-charts"></div>
+
+        <div class="ui grid">
+            <div class="ui three wide column grid">
+
+              <div class="ui slider checkbox row">
+                <input name="first-axis" type="checkbox" [(ngModel)]="losFirst" (change)="updateCharts()">
+                <label>Use LoS as X axis</label>
+              </div>
+
+              <div class="row">
+                  <button class="ui button" (click)="toggleAllSeries()">{{showAllSeries ? "Disable all series" : "Show All Series"}}</button>
+              </div>
+
+              <div class="row">
+                  <select [(ngModel)]="chartType" (ngModelChange)="changeChartType($event)" name="season_mode">
+                    <option [value]="'line'">Line Chart</option>
+                    <option [value]="'column'">Column Chart</option>
+                    <option [value]="'area'">Area Chart</option>
+                  </select>
+              </div>
+            </div>
+            <div id="rate-charts" class="ui thirteen wide column segment raised" style="height: 400px"></div>
+        </div>
     `
 })
 export class PreviewRates implements OnInit, AfterViewInit{
@@ -25,32 +49,41 @@ export class PreviewRates implements OnInit, AfterViewInit{
     ranges: RatesPreviewRange = {
         arrival_date: [20170815, 20170923],
         los: [1,7],
-        adults: 1,
-        children: 0
+        adults: "user input",
+        children: "user input"
     }
 
-    options = {
+    losFirst: boolean = false;
+
+    showAllSeries: boolean = true;
+
+    chartType: string = "line";
+
+    template_options = {
                 title: {
                     text: 'Tariff Rates Preview',
                     x: -20 //center
                 },
                 subtitle: {
-                    text: 'Preview your rates',
-                    x: -20
+                    text: 'Rates relating to arrival date',
+                    x: -30
                 },
                 credits: {
                     enabled: false
                 },
                 xAxis: {
-                    categories:  [
-                    "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19","Aug 20","Aug 21","Aug 22","Aug 23","Aug 24","Aug 25","Aug 26","Aug 27","Aug 28","Aug 29","Aug 30","Aug 31",
-                    "Sep 1", "Sep 2", "Sep 3", "Sep 4", "Sep 5","Sep 6","Sep 7","Sep 8","Sep 9","Sep 10","Sep 11","Sep 12","Sep 13","Sep 14","Sep 15","Sep 16","Sep 17",
-                    "Sep 18", "Sep 19","Sep 20","Sep 21","Sep 22","Sep 23"
-                    ]
+                    categories: [],
+                    title: {
+                        text: "Arrival Date"
+                    }
                 },
                 yAxis: [{
                     title: {
-                        text: '$/night'
+                        text: '$/night',
+                        align: "high",
+                        offset: 0,
+                        rotation: 0,
+                        y: -20
                     },
                     plotLines: [{
                         value: 0,
@@ -63,40 +96,115 @@ export class PreviewRates implements OnInit, AfterViewInit{
                     valuePrefix: '$'
                 },
                 plotOptions: {
+                    column: {
+                        marker: {
+                            enabled: false
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            format: '${y}'
+                        }
+                    },
                     line: {
+                        marker: {
+                            enabled: false
+                        }
+                    },
+                    area: {
                         marker: {
                             enabled: false
                         }
                     }
                 },
                 legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle',
-                    borderWidth: 0
+                    enabled: true
+                },
+                chart: {
                 },
                 series: []
             };
+
+    options: any;
+
+    updateCharts(): void {
+        console.log(`losFirst is ${this.losFirst}`);
+
+        // losFirst is still false when it is going to be turned on.
+        if (!this.losFirst) {
+            this.previewRates.ranges$.next({
+                arrival_date: "user input",
+                los: [1,38],
+                adults: "user input",
+                children: "user input"
+            });
+        } else {
+            this.previewRates.ranges$.next(this.ranges);
+        }
+    }
+
+    toggleAllSeries(): void {
+        this.showAllSeries = !this.showAllSeries;
+        $('#rate-charts').highcharts().series.map(s => {
+            let updatedOptions = {visible: this.showAllSeries};
+            s.update(updatedOptions);
+        });
+    }
+
+    changeChartType(t: string): void {
+        let updatedOptions = {chart: {type: t}};
+        $('#rate-charts').highcharts().update(updatedOptions);
+    }
 
     ngOnInit(): void {
         this.previewRates.ranges$.next(this.ranges);
 
         this.previewRates.ratesDisplay$.subscribe((d: Array<Array<number>>) => {
 
-            this.options.series = [];
+            if (this.losFirst) {
+                this.options = $.extend(true, {}, this.template_options);
 
-            let los_num = d[0].length;
+                this.options.subtitle.text = `Total $ relating to Lengh of Stay on ${this.previewRates.lastUserInput.arrival_date}`;
 
-            for(let i = 0; i < los_num; i++) {
-                let s = {};
-                s['name'] = `los = ${i+1}`;
+                this.options.xAxis.title.text = "Length of Stay";
+                this.options.xAxis.categories = Array.apply(0, Array(d[0].length)).map((_,index) => index+1);
 
-                s['data'] = d.map(d => (d[i] > 0) ? Math.floor(d[i]/(i+1)) : undefined);
+                this.options.yAxis[0].title.text = "Total $"
 
-                this.options.series.push(s);
+                this.options.chart.type = this.chartType;
+
+                this.options.legend.enabled = false;
+
+                this.options.series[0] = {};
+
+                this.options.series[0].name = "Length of Stay";
+
+                this.options.series[0].data = d[0].map(v => v || undefined);
+            } else {
+                this.options = $.extend(true, {}, this.template_options);
+
+                this.options.chart.type = this.chartType;
+
+                this.options.xAxis.categories = [
+                "Aug 15", "Aug 16", "Aug 17", "Aug 18", "Aug 19","Aug 20","Aug 21","Aug 22","Aug 23","Aug 24","Aug 25","Aug 26","Aug 27","Aug 28","Aug 29","Aug 30","Aug 31",
+                "Sep 1", "Sep 2", "Sep 3", "Sep 4", "Sep 5","Sep 6","Sep 7","Sep 8","Sep 9","Sep 10","Sep 11","Sep 12","Sep 13","Sep 14","Sep 15","Sep 16","Sep 17",
+                "Sep 18", "Sep 19","Sep 20","Sep 21","Sep 22","Sep 23"
+                ];
+
+                this.options.series = [];
+
+                let los_num = d[0].length;
+
+                for(let i = 0; i < los_num; i++) {
+                    let s = {};
+                    s['name'] = `los = ${i+1}`;
+
+                    s['data'] = d.map(d => (d[i] > 0) ? Math.floor(d[i]/(i+1)) : undefined);
+
+                    this.options.series.push(s);
+                }
             }
 
-            console.log(`los_num is ${los_num}`);
+            this.showAllSeries = true;
 
             $('#rate-charts')['highcharts'](this.options);
         });

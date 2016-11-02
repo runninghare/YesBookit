@@ -43,10 +43,15 @@ export class TestDataGeneratorService {
             "cpb": 15,
             "cds": 3,
             "guest_surcharge": 11,
-            "group1_rate_type": "F",
+
+            "group1_rate_type": "V",
             "group1_perrata_type": "PN",
-            "group1_nightly": 5,
+            "group1_nightly": 199,
             "group1_optional_weekly": 500.00,
+
+            "group2_rate_type": "F",
+            "group2_perrata_type": "PN",
+            "group2_nightly": 2.5,
             "test_scheme_override": {
                 "tax": 1.0,
                 "groups": []
