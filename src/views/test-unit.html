@@ -9,7 +9,8 @@
 			</div>
 		</span>
 
-		<span class="twelve wide column margin-v-20">{{dateData.status}}</span>
+                  <span class="eight wide column margin-v-20">{{dateData.status}}</span>
+		<span class="three wide column margin-v-20 right floated"><button id="calc-rates" class="ui primary button">Calc Rates!</button></span>
 
 		<date-bar class="sixteen wide column margin-v-20" [dateData]="dateData" [itemId]="itemId" (dateSliderUpdated)="dateSliderUpdated($event)"></date-bar>
 

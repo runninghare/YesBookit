@@ -58,8 +58,8 @@ let MAIN_STATES: Ng2StateDeclaration[] = [
     component: MySpike
   },
   {
-    name: 'app.preview-rates',
-    url: 'preview-rates',
+    name: 'app.arbitrary.preview-rates',
+    url: '/preview-rates',
     component: PreviewRates
   }
 ];

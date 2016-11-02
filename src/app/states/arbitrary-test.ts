@@ -27,13 +27,14 @@ import {environment} from "../environment";
           <div *ngIf="fromState" class="two wide column right floated">
               <button (click)="goBack()" class="ui button">Go Back</button>
           </div>
-          <div class="three wide column right floated">
-              <button (click)="previewRates()" class="ui button">Preview Rates</button>
+          <div class="six wide column right floated">
+              <button (click)="toggleShowRates()" class="ui button">{{showRates ? "Hide Rates" : "Show Rates"}}</button>
+              <button (click)="previewRates()" class="ui button">{{currentState() == "app.arbitrary.preview-rates" ? "Hide Preview Rates" : "Show Preview Rates"}}</button>
           </div>
       </div>
     <br />
     <div class="ui grid">
-        <div class="row">
+        <div class="row" *ngIf="showRates">
             <div class="eight wide column">
                 <div class="ui segment raised">
                    <div class="ui grid">
@@ -62,6 +63,7 @@ import {environment} from "../environment";
             </div>
         </div>
         <div class="ui divider"></div>
+        <ui-view class="sixteen wide column"></ui-view>
         <test-unit  class="row" [itemId]="i" *ngFor='let i of testRepeat'></test-unit>
     </div>
     `,
@@ -93,16 +95,34 @@ export class ArbitraryTest implements OnInit {
     subscriptionCurrentYBIRespnse: Subscription;
     subscriptionPostData: Subscription;
 
+    showRates: boolean = true;
+
+    toggleShowRates(): void {
+      this.showRates = !this.showRates;
+    }
+
     goBack(): void {
       this.uiRouter.stateService.go(this.fromState, this.fromStateParams, null) ;
     }
 
     previewRates(): void {
-      this.uiRouter.stateService.go("app.preview-rates");
+      if (this.currentState() == "app.arbitrary.preview-rates") {
+        this.uiRouter.stateService.go("^");
+      } else {
+        this.uiRouter.stateService.go(".preview-rates");
+      }
+    }
+
+    currentState(): string {
+      return this.uiRouter.stateService.current.name;
     }
 
     resultMatch(): boolean {
       return this.existingTotal == this.newTotal;
+    }
+
+    calcRates(): void {
+
     }
 
     ngOnInit(): void {
@@ -117,7 +137,7 @@ export class ArbitraryTest implements OnInit {
 
         this.subscriptionCurrentYBIRespnse = this.rateCalcService.currentYBIResponse$.subscribe((res: YBIExistingTariffResponse) => {
             if (res && res.result && res.result.length > 0) {
-                console.log(JSON.stringify(res));
+                // console.log(JSON.stringify(res));
                 this.existingTotal = parseInt(<any>res.result[0].total) + parseInt(<any>res.result[0].clean);
                 this.existingRent = res.result[0].xgs;
                 this.existingGuest = res.result[0].gs;

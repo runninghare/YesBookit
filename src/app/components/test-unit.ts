@@ -28,16 +28,18 @@ export class TestUnit implements AfterViewInit, OnInit {
   testUnitInputChange: Subject<any> = new BehaviorSubject<any>(null);
   debouncedTestUnitInputChange: Observable<any> = this.testUnitInputChange.debounceTime(300);
 
+  updateRateBtn$: Observable<any>;
+
   dateSliderUpdated(dt: DateData): void {
     this.updatePostWithDateData(dt);
 
-    console.log("=== update postData due to dateSliderUpdated ===")
-    this.rateCalcService.setCurrentPostData(this.postData);
+    // console.log("=== update postData due to dateSliderUpdated ===")
+    // this.rateCalcService.setCurrentPostData(this.postData);
   }
 
   seasonRateUpdate(val: any): void {
-    console.log("=== update postData due to seasonRateUpdate ===");
-    this.rateCalcService.setCurrentPostData(this.postData);
+    // console.log("=== update postData due to seasonRateUpdate ===");
+    // this.rateCalcService.setCurrentPostData(this.postData);
   }
 
   updatePostWithDateData(dt: DateData): void {
@@ -193,9 +195,9 @@ export class TestUnit implements AfterViewInit, OnInit {
       return null;
     }
     if (md[0] == "Aug") {
-      result = `${parseInt(md[1])}/08/2017`;
+      result = moment([2017, 7, parseInt(md[1])]).format("DD/MM/YYYY");
     } else if (md[0] == "Sep") {
-      result = `${parseInt(md[1])}/09/2017`;
+      result = moment([2017, 8, parseInt(md[1])]).format("DD/MM/YYYY");
     } else {
   }
     return result;
@@ -308,10 +310,14 @@ export class TestUnit implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     $('.ui.accordion')['accordion']();
+    this.updateRateBtn$ = Observable.fromEvent($('#calc-rates'), 'click');
+    this.updateRateBtn$.subscribe(() => {
+      this.testUnitInputChange.next(1);
+    })
   }
 
   onInputBlur(value: any): void {
-    this.testUnitInputChange.next(1);
+    // this.testUnitInputChange.next(1);
   }
 
   constructor(public dateDataService: DateDataService, public rateCalcService: RateCalcService) {

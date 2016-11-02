@@ -61,7 +61,7 @@ export class DateBarComponent  implements AfterViewInit, OnInit {
 
         // this.dateSliderStreamReady.emit(mergedDateStream);
 
-        this.mergedDateStream = mergedDateStream.debounceTime(1000);
+        this.mergedDateStream = mergedDateStream.debounceTime(300);
 
         this.subscriptionMergedStream = this.mergedDateStream.subscribe((dt: DateData) => {
             // console.log("=== check dt updates from merged stream ===");

@@ -2,12 +2,12 @@ import {Component, OnInit, AfterViewInit} from '@angular/core';
 import {CORE_DIRECTIVES, NgClass, NgIf} from '@angular/common';
 import {Subject, BehaviorSubject, Observable} from 'rxjs/Rx';
 import {PreviewRatesService, RatesPreviewRange} from '../services/preview-rates.service';
-import {HighChartsRenderer} from '../directives/common';
 import {UIRouter} from "ui-router-ng2";
 
 @Component({
     template: `
-        <h1>Preview Rates</h1>
+  <!--      
+       <h1>Preview Rates</h1>
 
         <div class="ui grid" style="margin-bottom: 10px">
             <div class="two wide column right floated">
@@ -16,9 +16,9 @@ import {UIRouter} from "ui-router-ng2";
         </div>
 
         <hr />
+  -->      
         <div id="rate-charts"></div>
-    `,
-    directives: [HighChartsRenderer]
+    `
 })
 export class PreviewRates implements OnInit, AfterViewInit{
 
@@ -56,7 +56,8 @@ export class PreviewRates implements OnInit, AfterViewInit{
                         value: 0,
                         width: 1,
                         color: '#808080'
-                    }]
+                    }],
+                    min: 0
                 }],
                 tooltip: {
                     valuePrefix: '$'
