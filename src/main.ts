@@ -48,7 +48,7 @@ bootstrap(UIView, [
     // Hashbang mode
     // provide(LocationStrategy, { useClass: HashLocationStrategy }),
     // HTML5 push state mode
-    provide(LocationStrategy, { useClass: PathLocationStrategy }),
+    provide(LocationStrategy, { useClass: HashLocationStrategy }),
     provide(PlatformLocation, { useClass: BrowserPlatformLocation }),
 
     ...UIROUTER_PROVIDERS,
